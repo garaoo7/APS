@@ -5,8 +5,12 @@ class Search extends MX_Controller{
 	public function __construct(){
 	}
 	public function index(){
-		echo "mice";
+		$this->load->view('search/HomePage');
 	}
-
+	public function getSuggestion(){
+		$searchTerm = $this->input->get('searchTerm',true);
+		echo $searchTerm;
+		exit();
+	}
 }
 ?>

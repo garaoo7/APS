@@ -1,0 +1,32 @@
+Pages:
+	1. HomePage-> search bar + autosuggester + button.
+	2. Question Detail Page. After clicking on a question.
+
+Solr:
+	1. Schema
+	2. solrConfig.xml
+	3. Request Handlers
+
+
+
+Document:
+Question
+	1. questionId
+	2. questionTitle
+	3. questionDescription
+	4. tags
+	5. postingTime
+	6. lastActivityTime
+
+
+Properties:
+	1. noOfViews
+	2. noOfAnswers
+
+
+
+
+Things could be done:
+1. text to be tokenized.
+2. add topic aliases -> topic are tags in our case
+3. persistant connection -> might have data cosumption issues
