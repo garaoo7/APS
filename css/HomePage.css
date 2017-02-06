@@ -1,4 +1,3 @@
-
 header {
 	position: absolute;
 	top:0px;
@@ -26,7 +25,7 @@ header a:hover {
 }
 
 
-div {
+.main-div {
 	display:block;
 	margin: auto;
 	text-align:center;
@@ -37,6 +36,37 @@ div img {
 	width: 270px;
 	height: 95px;
 	margin:5px;
+}
+
+
+.recommdated-questions{
+	width: 570px;
+	text-align: center;
+	border-top: 1px solid #bdbdbd;
+	border-bottom: 1px solid #d3d3d3;
+	border-right: 1px solid #d3d3d3;
+	border-left: 1px solid #d3d3d3;
+	padding-right: 30px;
+	font: 16px arial, sans-serif;
+	text-indent:5px;
+	z-index: 300;
+	height: 400px !important;
+	overflow-y: auto;
+	display: none; 
+	margin-left: 398px;
+	padding: 0px 0px 0px 0px;
+
+}
+
+.recommdated-question {
+	text-align: left;
+	line-height: 1.5;
+	list-style: none;
+	cursor: pointer;
+	position: relative;
+	border-bottom: 1px solid #e2e2e2;
+	margin: 0px;
+	padding-left:10px;
 }
 
 .search {
