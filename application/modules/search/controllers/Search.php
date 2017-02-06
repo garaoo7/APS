@@ -2,10 +2,13 @@
 
 class Search extends MX_Controller{
 
+	private $indexer;
+	private $questionModel;
 	public function __construct(){
-	}
-	public function index(){
-		$this->load->view('search/HomePage');
+		$this->load->model('common/Question_model');
+		$this->load->library('search/search_lib');
+		$this->questionModel = new question_model();
+		$this->indexer 	     = new search_lib();
 	}
 	public function getSuggestion(){
 		$searchTerm = $this->input->get('searchTerm',true);

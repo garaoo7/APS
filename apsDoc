@@ -30,3 +30,11 @@ Things could be done:
 1. text to be tokenized.
 2. add topic aliases -> topic are tags in our case
 3. persistant connection -> might have data cosumption issues
+4. Long Polling (Comet) -> dont think it will be usable
+
+Filters on search result page:
+	1. no of views
+	2. no of answers
+	3. tags
+	4. posting time
+	5. By author : (all people or people you follow)
