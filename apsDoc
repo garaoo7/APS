@@ -22,6 +22,7 @@ Question
 Properties:
 	1. noOfViews
 	2. noOfAnswers
+	3. No of upvotes -> property of an answer
 
 
 
@@ -37,4 +38,13 @@ Filters on search result page:
 	2. no of answers
 	3. tags
 	4. posting time
-	5. By author : (all people or people you follow)
+	5. By author : (all people or people you follow) -> may not do it right now
+	
+
+
+
+DB tabls involved:
+1. messageTable 						-> question Main data
+2. tags 								-> Main tags data
+3. tags_content_mapping 				-> mapping of tags to questions
+4. messageDiscussion					-> Seems like it has the decription of the question

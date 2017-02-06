@@ -3,7 +3,7 @@ class Indexer_lib{
 		
 	private $questionModel;
 	private $ci;
-	private function _init_lib(){
+	 function __construct(){
 		$this->ci = & get_instance();
 		$this->ci->load->model('common/Question_model');
 		$this->questionModel = new question_model();
@@ -14,8 +14,14 @@ class Indexer_lib{
 	}
 
 	public function getQuestionCount(){
-		$this->_init_lib();
 		return $this->questionModel->getQuestionCount();
+	}
+
+	public function getMultipleQuestionsDocuments($offset=0,$batchSize=1){
+		$questionData = $this->questionModel->getMultipleQuestionsData($offset,$batchSize);
+	}
+	public function indexDocuments($questionDocuments){
+
 	}
 }
 ?>

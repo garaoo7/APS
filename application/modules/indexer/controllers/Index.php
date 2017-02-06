@@ -13,8 +13,10 @@ class Index extends MX_Controller{
 			$offset = 0;
 			$batchSize = (int)$batchSize;
 			$questionCount = $this->indexerLib->getQuestionCount();
+			echo $questionCount;
 			while($offset<=$questionCount){
-				$questionIds = $this->indexerLib->getAllQuestionIds($offset,$batchSize);	
+				$questionDocuments = $this->indexerLib->getMultipleQuestionsDocuments($offset,$batchSize);	
+				$response = $this->indexerLib->indexDocuments($questionDocuments);
 				$offset = $offset+$batchSize;
 			}
 		}
