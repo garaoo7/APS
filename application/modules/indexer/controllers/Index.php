@@ -8,7 +8,7 @@ class Index extends MX_Controller{
 		 $this->indexerLib = new indexer_lib();
 	}
 
-	public function indexDocuments($type = 'single',$batchSize = '1',$questionId=''){
+	public function indexDocuments($type = 'single',$batchSize = 30,$questionId=''){
 		if($type =='all'){
 			$offset = 0;
 			$batchSize = (int)$batchSize;
@@ -16,6 +16,7 @@ class Index extends MX_Controller{
 			echo $questionCount;
 			while($offset<=$questionCount){
 				$questionDocuments = $this->indexerLib->getMultipleQuestionsDocuments($offset,$batchSize);	
+				var_dump($questionDocuments);
 				$response = $this->indexerLib->indexDocuments($questionDocuments);
 				$offset = $offset+$batchSize;
 			}

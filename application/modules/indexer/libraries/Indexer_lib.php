@@ -18,10 +18,25 @@ class Indexer_lib{
 	}
 
 	public function getMultipleQuestionsDocuments($offset=0,$batchSize=1){
-		$questionData = $this->questionModel->getMultipleQuestionsData($offset,$batchSize);
+		$questionsData = $this->questionModel->getMultipleQuestionsData($offset,$batchSize);
+		$questionsDocuments = $this->createDocuments($questionsData);
+		return $questionsDocuments;
 	}
-	public function indexDocuments($questionDocuments){
+	public function indexDocuments($questionsDocuments){
+		$params=['name'=>'John', 'surname'=>'Doe', 'age'=>36)
+		$defaults = array(
+		CURLOPT_URL => 'http://myremoteservice/', 
+		CURLOPT_POST => true,
+		CURLOPT_POSTFIELDS => $params,
+		);
+		$ch = curl_init();
+		curl_setopt_array($ch, ($options + $defaults));
+	}
 
+	public function createDocuments($questionsData){
+		$questionDocuments[]['id'] = '1';
+		$questionDocuments[]['title'] = 'test';
+		return $questionDocuments;
 	}
 }
 ?>

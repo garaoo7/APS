@@ -22,7 +22,7 @@ create table questions(
  description varchar(5000),
  creationTime datetime not null,
  updated datetime,
- views int(10) default 0,
+ viewCount int(10) default 0,
  ansCount int(10) default 0,
  userId int(10),
  status enum('live','history')
@@ -30,7 +30,8 @@ create table questions(
 
 create table tag(
  tagId int(10) auto_increment primary key,
- tagName varchar(100)
+ tagName varchar(100),
+ `tag_quality_score` float(10,4) default 0.00
 );
 
 create table questionTag(

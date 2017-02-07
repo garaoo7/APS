@@ -44,7 +44,10 @@ Filters on search result page:
 
 
 DB tabls involved:
-1. messageTable 						-> question Main data
+1. messageTable 						-> Main data. 
+											1. For questions has parent as 0 and from other ='user'
+											2. For answer -> main answer id is 0, parentid = questions id, from other = 'user'
 2. tags 								-> Main tags data
 3. tags_content_mapping 				-> mapping of tags to questions
-4. messageDiscussion					-> Seems like it has the decription of the question
+4. messageDiscussion					-> Seems like it has the decription of the question, not used i think
+5. digUpUserMap							-> maintains user like and silike
