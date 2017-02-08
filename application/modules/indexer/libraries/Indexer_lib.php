@@ -14,7 +14,7 @@ class Indexer_lib{
 	}
 
 	public function getQuestionCount(){
-		return $this->questionModel->getQuestionCount();
+		return $this->questionModel->getQuestionsCount();
 	}
 
 	public function getMultipleQuestionsDocuments($offset=0,$batchSize=1){
