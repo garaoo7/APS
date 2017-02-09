@@ -17,8 +17,7 @@ class Indexer_lib{
 	}
 
 	public function getQuestionCount(){
-		$this->_init_lib();
-		return $this->questionModel->getQuestionCount();
+		return $this->questionModel->getQuestionsCount();
 	}
 
 	public function generateUrlOnSearch() {

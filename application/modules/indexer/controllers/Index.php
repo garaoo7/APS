@@ -8,14 +8,16 @@ class Index extends MX_Controller{
 		 $this->indexerLib = new indexer_lib();
 	}
 
-	public function indexDocuments($type = 'single',$batchSize = '1',$questionId=''){
-		$questionCount = $this->indexerLib->getQuestionCount();
+	public function indexDocuments($type = 'single',$batchSize = 30,$questionId=''){
 		if($type =='all'){
 			$offset = 0;
 			$batchSize = (int)$batchSize;
 			$questionCount = $this->indexerLib->getQuestionCount();
+			echo $questionCount;
 			while($offset<=$questionCount){
-				$questionIds = $this->indexerLib->getAllQuestionIds($offset,$batchSize);	
+				$questionDocuments = $this->indexerLib->getMultipleQuestionsDocuments($offset,$batchSize);	
+				var_dump($questionDocuments);
+				$response = $this->indexerLib->indexDocuments($questionDocuments);
 				$offset = $offset+$batchSize;
 			}
 		}
