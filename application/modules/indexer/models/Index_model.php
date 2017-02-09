@@ -11,7 +11,7 @@ class Index_model extends MY_Model{
 			$this->dbHandle = $this->getWriteHandle();
 		}
 	}
-
+     
   
 }?>
 

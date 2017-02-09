@@ -9,6 +9,7 @@ class Index extends MX_Controller{
 	}
 
 	public function indexDocuments($type = 'single',$batchSize = '1',$questionId=''){
+		$questionCount = $this->indexerLib->getQuestionCount();
 		if($type =='all'){
 			$offset = 0;
 			$batchSize = (int)$batchSize;
@@ -21,6 +22,12 @@ class Index extends MX_Controller{
 		else if($type =='single' && !empty($questionId)){
 
 		}
+	}
+
+	public function getDataFromSolr(){
+		$this->load->library('indexer/indexer_lib');
+		 $this->indexerLib = new indexer_lib();		
+		$response = $this->indexerLib->generateUrlOnSearch();
 	}
 }
 ?>
