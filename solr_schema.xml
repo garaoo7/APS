@@ -17,3 +17,6 @@
 <field name="noOfAnswers" type="long" indexed="true" stored="true"/>
 <field name="tagDetails" type="string" indexed="true" stored="true" multiValued="true"/>
 
+<fieldType name="text" class="solr.TextField" positionIncrementGap="100">
+
+
