@@ -124,5 +124,41 @@ class Home extends MX_Controller{
 			}
 		}
 	}
+
+
+	public function createQuestionTagsData(){
+		$questionTagsCount = $this->shikshaQuestionModel->getQuestionTagsCount();
+		
+		$offset = 0;
+		$batchSize = 10000;
+
+		// $questionTagsCount = 9;
+		// $batchSize = 5;
+		echo "Total No of tags question relations : ". $questionTagsCount.'<br>';
+		ob_flush();
+		flush();
+		while($offset<$questionTagsCount){
+			echo '<br>Fetching tags question relations with <br> Offset : '.$offset.'<br> batchSize: '.$batchSize;
+			ob_flush();
+			flush();
+			$questionTagsData = $this->shikshaQuestionModel->getShikshaMultipleQuestionTagsData($offset,$batchSize);
+			echo "<br>data fetched";
+			ob_flush();
+			flush();
+			$status = $this->questionModel->addMultipleQuestionTags($questionTagsData);
+			if($status){
+				$offset = $offset + $batchSize;	
+				echo "<br>inserted successfully<br>";
+				ob_flush();
+				flush();
+			}
+			else{
+				echo "<br>Try again with same offset and batchSize";
+				break;
+				ob_flush();
+				flush();
+			}
+		}
+	}
 }
 ?>

@@ -61,5 +61,18 @@ class Question_model extends MY_Model{
   		}
   		return true;
   	}
+
+  	public function addMultipleQuestionTags($data){
+  		$this->_init('write');
+  		$this->dbHandle->trans_start();
+  		$this->dbHandle->insert_batch('questionTag', $data);
+  		$this->dbHandle->trans_complete();
+  		// echo $this->dbHandle->last_query();
+  		if($this->dbHandle->trans_status()==false){
+  			echo "insertion failed";
+  			return false;
+  		}
+  		return true;
+  	}
 }?>
 
