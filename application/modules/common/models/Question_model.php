@@ -44,8 +44,8 @@ class Question_model extends MY_Model{
 				    q.viewCount,
 				    q.ansCount,
 				    group_concat(t.tagId SEPARATOR '|::|') as tagId,
-				    group_concat(tagName SEPARATOR '|::|') as tagName,
-				    group_concat(tag_quality_score SEPARATOR '|::|') as tag_quality_score
+				    group_concat(t.tagName SEPARATOR '|::|') as tagName,
+				    group_concat(t.tag_quality_score SEPARATOR '|::|') as tag_quality_score
 				FROM
 				    questions q
 				        LEFT JOIN
@@ -64,8 +64,9 @@ class Question_model extends MY_Model{
 		// if($baseQuestionId == 1220000){
 		// 	 		// echo '<pre>'.print_r($sql,true).'</pre>';			
 		// }
+		
+		// echo '<pre>'.print_r($result,true).'</pre>';
 		return $result;
-// 		echo '<pre>'.print_r($result,true).'</pre>';
 // die;
 	}
   

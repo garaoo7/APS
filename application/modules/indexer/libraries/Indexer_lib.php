@@ -25,6 +25,8 @@ class Indexer_lib{
 	public function getMultipleQuestionsDocuments($baseQuestionId=0,$batchSize=1){
 		$this->_init_lib();
 		$questionData = $this->questionModel->getMultipleQuestionsData($baseQuestionId,$batchSize);
+		echo '<br> question data fetched';
+		echo '<br> generating documents';
 		$getQuestionDocuments = $this->createDocuments($questionData);
 		return $getQuestionDocuments;
 	}
@@ -60,6 +62,9 @@ class Indexer_lib{
     		$tagId = explode($delimiter,$question['tagId']);
     		$tagName = explode($delimiter,$question['tagName']);
     		$tagQualityScore = explode($delimiter,$question['tag_quality_score']);
+    		// print_r($tagId);
+    		// print_r($tagName);
+    		// print_r($tagQualityScore);
     		$size = count($tagId);
     		for($i=0;$i<$size;$i++){
     			$question['tag_name_'.$tagId[$i]] = $tagName[$i];
@@ -74,7 +79,6 @@ class Indexer_lib{
 
     		// echo '<pre>'.print_r($question,true).'</pre>';	
     		
-    		// die;
     		// die;
     		// $question = array();
     		// // $question['id']
@@ -108,23 +112,22 @@ class Indexer_lib{
         $updateUrl = SOLR_UPDATE_URL;
         echo $updateUrl;
         foreach ($questionDocuments as $key => $value) {
-        	print_r($value);
-        	// die;
+        	print_r($value);											
         	$response = $this->curlLib->curl($updateUrl, $value,1);   
-        	var_dump($response);
-        	// var_dump($response);die;
+        	echo '<pre>'.print_r($response).'</pre>';
         }
-     	
      	$response = $this->commit('APS','update');
-     	var_dump($response);
+     	echo '<pre>'.print_r($response).'</pre>';
      	// die;
     }
     public function commit($collection,$handler){
     	$this->ci->load->library('indexer/Curl');
         $this->curlLib = new Curl();
         if($handler=='update'){
-        	$response = $this->curlLib->curl(SOLR_UPDATE_URL.'?commit=true','');
-        	
+        	$response = $this->curlLib->curl(SOLR_UPDATE_URL.'?commit=true',array());
+        	echo "<br>inside<br>";
+        	print_r($response);
+        	die;
         }
         return $response;
     }

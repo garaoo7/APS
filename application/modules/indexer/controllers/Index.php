@@ -13,15 +13,17 @@ class Index extends MX_Controller{
 			$minQuestionId =(int) $this->indexerLib->getMinimumQuestionId();
 			$maxQuestionId  = (int)$this->indexerLib->getMaximumQuestionId();
 			$batchSize = (int)$batchSize;
-			echo $minQuestionId.'<br>';
-			echo $maxQuestionId;
-			//$minQuestionId = 1500000;
+			echo 'Min Question id : '.$minQuestionId.'<br>';
+			echo 'Max Question id : '.$maxQuestionId.'<br>';
+			$minQuestionId = 3500000;
 			//$questionCount = $this->indexerLib->getQuestionCount();
 			$baseQuestionId = $minQuestionId;
 			$count = 0;
 			while($baseQuestionId<=$maxQuestionId){
-				echo $baseQuestionId.'<br>';
+				echo "Fetching Documents with baseQuestionId : ".$baseQuestionId. " and batchSize=".$batchSize;
 				$questionDocuments = $this->indexerLib->getMultipleQuestionsDocuments($baseQuestionId,$batchSize);	
+				echo '<br> Documents generated';
+				echo '<br>sending for indexing';
 				$response = $this->indexerLib->indexDocuments($questionDocuments);
 				// echo '<br>';
 				// $count = $count + count($questionDocuments);
@@ -29,7 +31,8 @@ class Index extends MX_Controller{
 				// $temp = $baseQuestionId+$batchSize;
 				// echo 'maxQuestionId : '.$temp.' ';
 				// echo 'count : '.($count).'<br>';
-				
+				echo $response;
+				die;
 				ob_flush();
 				flush();
 				$baseQuestionId = $baseQuestionId+$batchSize;
