@@ -42,5 +42,6 @@ create table tag(
 create table questionTag(
 	id int(10) auto_increment primary key,
 	questionId int(10),
-    tagId int(10)
+    tagId int(10),
+    status enum('live','deleted') NOT NULL DEFAULT 'live'
 );

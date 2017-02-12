@@ -64,5 +64,24 @@ class Shiksha_question_model extends MY_Model{
 		// die;
 		return $result;
 	}
+
+
+	public function getQuestionTagsCount(){
+		$this->_init('read');
+		$query = "select count(*) as count from tags_content_mapping where content_type='question'";
+		$result = $this->dbHandle->query($query)->result_array();
+		return $result[0]['count'];
+	}
+
+	public function getShikshaMultipleQuestionTagsData($offset=0,$batchSize=1){
+		$this->_init('read');
+		$query = "select tag_Id as tagId,content_id as questionId,status
+				  from tags_content_mapping limit ".$batchSize." offset ".$offset."
+				 ";
+		$result = $this->dbHandle->query($query)->result_array();
+		//echo '<pre>'.print_r($result,true).'</pre>';
+		// die;
+		return $result;
+	}
 }?>
 

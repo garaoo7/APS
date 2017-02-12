@@ -10,15 +10,28 @@ class Index extends MX_Controller{
 
 	public function indexDocuments($type = 'single',$batchSize = 30,$questionId=''){
 		if($type =='all'){
-			$offset = 0;
+			$minQuestionId =(int) $this->indexerLib->getMinimumQuestionId();
+			$maxQuestionId  = (int)$this->indexerLib->getMaximumQuestionId();
 			$batchSize = (int)$batchSize;
-			$questionCount = $this->indexerLib->getQuestionCount();
-			echo $questionCount;
-			while($offset<=$questionCount){
-				$questionDocuments = $this->indexerLib->getMultipleQuestionsDocuments($offset,$batchSize);	
-				var_dump($questionDocuments);
-				$response = $this->indexerLib->indexDocuments($questionDocuments);
-				$offset = $offset+$batchSize;
+			echo $minQuestionId.'<br>';
+			echo $maxQuestionId;
+			//$minQuestionId = 1500000;
+			//$questionCount = $this->indexerLib->getQuestionCount();
+			$baseQuestionId = $minQuestionId;
+			$count = 0;
+			while($baseQuestionId<=$maxQuestionId){
+				echo $baseQuestionId.'<br>';
+				$questionDocuments = $this->indexerLib->getMultipleQuestionsDocuments($baseQuestionId,$batchSize);	
+				echo '<br>';
+				$count = $count + count($questionDocuments);
+				echo 'baseQuestion : '.$baseQuestionId.'  ';
+				$temp = $baseQuestionId+$batchSize;
+				echo 'maxQuestionId : '.$temp.' ';
+				echo 'count : '.($count).'<br>';
+				//$response = $this->indexerLib->indexDocuments($questionDocuments);
+				ob_flush();
+				flush();
+				$baseQuestionId = $baseQuestionId+$batchSize;
 			}
 		}
 		else if($type =='single' && !empty($questionId)){
