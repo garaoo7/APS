@@ -57,7 +57,9 @@ class Indexer_lib{
     public function createDocuments($questionsData){
     	$delimiter  = '|::|';
     	$completeXML = array();
+        //print_r($questionsData);die;
     	foreach ($questionsData as $question) {
+            //print_r($question);die;
     		$tagDetails = array();	
     		$tagId = explode($delimiter,$question['tagId']);
     		$tagName = explode($delimiter,$question['tagName']);
@@ -65,11 +67,16 @@ class Indexer_lib{
     		// print_r($tagId);
     		// print_r($tagName);
     		// print_r($tagQualityScore);
-    		$size = count($tagId);
-    		for($i=0;$i<$size;$i++){
-    			$question['tag_name_'.$tagId[$i]] = $tagName[$i];
-    			$question['tag_quality_'.$tagId[$i]] = $tagQualityScore[$i];
-    		}
+            if($tagId){
+                $size = count($tagId);
+                for($i=0;$i<$size;$i++){
+                    $question['tag_name_'.$tagId[$i]] = $tagName[$i];
+                    $question['tag_quality_'.$tagId[$i]] = $tagQualityScore[$i];
+                }
+            }
+        		
+
+            $question['questionCreationDate'] = str_replace(' ', 'T', $question['questionCreationDate']).'Z';
     		// //
     		// if($size>1){
     		// 	print_r($size);
@@ -85,9 +92,7 @@ class Indexer_lib{
     		unset($question['tagId']);
     		unset($question['tagName']);
     		unset($question['tag_quality_score']);
-
     		$completeXML[] = $this->generateXML($question);
-    		
     	}
 	return $completeXML;
     }
@@ -112,7 +117,6 @@ class Indexer_lib{
         $updateUrl = SOLR_UPDATE_URL;
         echo $updateUrl;
         foreach ($questionDocuments as $key => $value) {
-        	print_r($value);											
         	$response = $this->curlLib->curl($updateUrl, $value,1);   
         	echo '<pre>'.print_r($response).'</pre>';
         }
