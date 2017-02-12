@@ -14,10 +14,14 @@ Question
 	1. questionId
 	2. questionTitle
 	3. questionDescription
-	4. tags
-	5. postingTime
-	6. lastActivityTime
-
+	4. questionCreationDate
+	5. tagId (m1)
+	6. tags  (m1) 
+	7. tagQualityScore (m1)
+	8. postingTime
+	9. lastActivityTime
+	10. noOfViews
+	11. noOfAnswers	
 
 Properties:
 	1. noOfViews
@@ -51,3 +55,6 @@ DB tabls involved:
 3. tags_content_mapping 				-> mapping of tags to questions
 4. messageDiscussion					-> Seems like it has the decription of the question, not used i think
 5. digUpUserMap							-> maintains user like and silike
+
+import table in database : 
+mysql -u root -p  shiksha  < /home/APS-shiksha/shiksha_tags.sql

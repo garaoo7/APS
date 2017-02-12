@@ -1,0 +1,19 @@
+	1. questionId
+	2. questionTitle
+	3. questionDescription
+	4. questionCreationDate
+	5. tagId (m1)
+	6. tags  (m1) 
+	7. tagQualityScore (m1)
+	9. lastActivityTime
+	10. noOfViews
+	11. noOfAnswers	
+
+<field name="questionId" type="string" indexed="true" stored="true"/>
+<field name="questionTitle" type="text" indexed="true" stored="true"/>
+<field name="questionDescription" type="text" indexed="true" stored="true"/>
+<field name="questionCreationDate" type="date" indexed="true" stored="true" default="NOW"/>
+<field name="noOfViews" type="long" indexed="true" stored="true"/>
+<field name="noOfAnswers" type="long" indexed="true" stored="true"/>
+<field name="tagDetails" type="string" indexed="true" stored="true" multiValued="true"/>
+
