@@ -39,13 +39,11 @@ class Question_model extends MY_Model{
 		$maxQuestionId = $baseQuestionId + $batchSize;
 		$sql = "SELECT 
 				    q.questionId,
-				    q.title,
-				    q.description,
-				    q.creationDate,
-				    q.updated,
+				    q.title as questionTitle,
+				    q.description as questionDescription,
 				    q.viewCount,
 				    q.ansCount,
-				    group_concat(t.tagId SEPARATOR '|::|') as tags,
+				    group_concat(t.tagId SEPARATOR '|::|') as tagId,
 				    group_concat(tagName SEPARATOR '|::|') as tagName,
 				    group_concat(tag_quality_score SEPARATOR '|::|') as tag_quality_score
 				FROM

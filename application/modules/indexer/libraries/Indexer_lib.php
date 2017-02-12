@@ -26,6 +26,7 @@ class Indexer_lib{
 		$this->_init_lib();
 		$questionData = $this->questionModel->getMultipleQuestionsData($baseQuestionId,$batchSize);
 		$getQuestionDocuments = $this->createDocuments($questionData);
+		return $getQuestionDocuments;
 	}
 	public function getQuestionCount(){
 		$this->_init_lib();
@@ -51,8 +52,81 @@ class Indexer_lib{
         var_dump($customCurlObject1);die;
     }
 
-    public function createDocument($questionsData){
+    public function createDocuments($questionsData){
+    	$delimiter  = '|::|';
+    	$completeXML = array();
+    	foreach ($questionsData as $question) {
+    		$tagDetails = array();	
+    		$tagId = explode($delimiter,$question['tagId']);
+    		$tagName = explode($delimiter,$question['tagName']);
+    		$tagQualityScore = explode($delimiter,$question['tag_quality_score']);
+    		$size = count($tagId);
+    		for($i=0;$i<$size;$i++){
+    			$question['tag_name_'.$tagId[$i]] = $tagName[$i];
+    			$question['tag_quality_'.$tagId[$i]] = $tagQualityScore[$i];
+    		}
+    		// //
+    		// if($size>1){
+    		// 	print_r($size);
+    		// echo '<pre>'.print_r($tagDetails,true).'</pre>';	
+    		// 	die;;
+    		// }
 
+    		// echo '<pre>'.print_r($question,true).'</pre>';	
+    		
+    		// die;
+    		// die;
+    		// $question = array();
+    		// // $question['id']
+    		unset($question['tagId']);
+    		unset($question['tagName']);
+    		unset($question['tag_quality_score']);
+
+    		$completeXML[] = $this->generateXML($question);
+    		
+    	}
+	return $completeXML;
+    }
+
+    public function generateXML($questionData){
+    	$xml = '<add><doc>';
+    	foreach ($questionData as $key => $value) {
+    		$xml  = $xml . '<field name ="'.$key.'"><![CDATA['.htmlentities(strip_tags($this->asciConvert($value))).']]></field>';
+    	}
+    	$xml .= '</doc></add>';
+    	return $xml;
+    }
+    public function asciConvert($string){
+    	return $string;
+
+    	//return preg_replace_callback('/[^\x20-\x7F]/e', ' ', $string);
+    }
+
+    public function indexDocuments($questionDocuments){
+    	$this->ci->load->library('indexer/Curl');
+        $this->curlLib = new Curl();
+        $updateUrl = SOLR_UPDATE_URL;
+        echo $updateUrl;
+        foreach ($questionDocuments as $key => $value) {
+        	print_r($value);
+        	// die;
+        	$response = $this->curlLib->curl($updateUrl, $value,1);   
+        	var_dump($response);
+        	// var_dump($response);die;
+        }
+     	
+     	$response = $this->commit('APS','update');
+     	var_dump($response);
+     	// die;
+    }
+    public function commit($collection,$handler){
+    	$this->ci->load->library('indexer/Curl');
+        $this->curlLib = new Curl();
+        if($handler=='update'){
+        	$response = $this->curlLib->curl(SOLR_UPDATE_URL.'?commit=true','');
+        	
+        }
+        return $response;
     }
 }
 ?>

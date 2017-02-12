@@ -22,13 +22,14 @@ class Index extends MX_Controller{
 			while($baseQuestionId<=$maxQuestionId){
 				echo $baseQuestionId.'<br>';
 				$questionDocuments = $this->indexerLib->getMultipleQuestionsDocuments($baseQuestionId,$batchSize);	
-				echo '<br>';
-				$count = $count + count($questionDocuments);
-				echo 'baseQuestion : '.$baseQuestionId.'  ';
-				$temp = $baseQuestionId+$batchSize;
-				echo 'maxQuestionId : '.$temp.' ';
-				echo 'count : '.($count).'<br>';
-				//$response = $this->indexerLib->indexDocuments($questionDocuments);
+				$response = $this->indexerLib->indexDocuments($questionDocuments);
+				// echo '<br>';
+				// $count = $count + count($questionDocuments);
+				// echo 'baseQuestion : '.$baseQuestionId.'  ';
+				// $temp = $baseQuestionId+$batchSize;
+				// echo 'maxQuestionId : '.$temp.' ';
+				// echo 'count : '.($count).'<br>';
+				
 				ob_flush();
 				flush();
 				$baseQuestionId = $baseQuestionId+$batchSize;
