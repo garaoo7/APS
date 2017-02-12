@@ -13,14 +13,62 @@ class Question_model extends MY_Model{
 	}
 
 	public function getQuestionsCount(){
-		$this->_init('read');
-		// $query = "select count(*) as count from messageTable where parentId = 0 and fromOthers='user'";
-		// $result = $this->dbHandle->query($query)->result_array();
+		$this->_init('write');
+		$sql = "select count(*) as count from questions where status in ('live','closed')";
+		$result = $this->dbHandle->query($sql)->result_array();
 		return $result[0]['count'];
 	}
+	public function getMinimumQuestionId(){
+		$this->_init('write');
+		$sql = "select min(questionId) as min from questions where status in ('live','closed')";
+		$result = $this->dbHandle->query($sql)->result_array();
+		return $result[0]['min'];
+	}
+	public function getMaximumQuestionId(){
+		$this->_init('write');
+		$sql = "select max(questionId) as max from questions where status in ('live','closed')";
+		$result = $this->dbHandle->query($sql)->result_array();
+		return $result[0]['max'];
+	}
+	public function getMultipleQuestionsData($baseQuestionId=0,$batchSize=1){
+		$this->_init('write');
+		// $sql = "select q.questionId,q.title,q.description,q.creationDate,q.updated,q.viewCount,q.ansCount,t.tagId,t.tagName,t.tag_quality_score,t.main_id from questions q left join questionTag qt on q.questionId = qt.questionId inner join tag t on t.tagId = qt.tagId where q.status in ('live','closed') and qt.status='live' and t.status='live'";
+		// echo $baseQuestionId.' ';
+		// echo $baseQuestionId+$batchSize;
 
-	public function getMultipleQuestionsData($offset=0,$batchSize=1){
-		return;
+		$maxQuestionId = $baseQuestionId + $batchSize;
+		$sql = "SELECT 
+				    q.questionId,
+				    q.title,
+				    q.description,
+				    q.creationDate,
+				    q.updated,
+				    q.viewCount,
+				    q.ansCount,
+				    group_concat(t.tagId SEPARATOR '|::|') as tags,
+				    group_concat(tagName SEPARATOR '|::|') as tagName,
+				    group_concat(tag_quality_score SEPARATOR '|::|') as tag_quality_score
+				FROM
+				    questions q
+				        LEFT JOIN
+				    questionTag  qt  ON q.questionId = qt.questionId AND qt.status = 'live'
+				        LEFT JOIN
+				    tag t ON t.tagId = qt.tagId AND t.status = 'live'
+				WHERE
+						q.status IN ('live' , 'closed')
+				        AND q.questionId >= ".(int)$baseQuestionId."
+				        AND q.questionId < ". (int)$maxQuestionId."
+				       	group by questionId";
+		//echo '<pre>'.$sql.'</pre>';
+		
+		$result =$this->dbHandle->query($sql)->result_array();
+		
+		// if($baseQuestionId == 1220000){
+		// 	 		// echo '<pre>'.print_r($sql,true).'</pre>';			
+		// }
+		return $result;
+// 		echo '<pre>'.print_r($result,true).'</pre>';
+// die;
 	}
   
 
