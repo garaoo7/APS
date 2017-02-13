@@ -41,6 +41,7 @@ class Question_model extends MY_Model{
 				    q.questionId,
 				    q.title as questionTitle,
 				    q.description as questionDescription,
+				    q.creationDate as questionCreationDate,
 				    q.viewCount,
 				    q.ansCount,
 				    group_concat(t.tagId SEPARATOR '|::|') as tagId,

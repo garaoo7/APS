@@ -21,10 +21,11 @@ class Index extends MX_Controller{
 			$count = 0;
 			while($baseQuestionId<=$maxQuestionId){
 				echo "Fetching Documents with baseQuestionId : ".$baseQuestionId. " and batchSize=".$batchSize;
-				$questionDocuments = $this->indexerLib->getMultipleQuestionsDocuments($baseQuestionId,$batchSize);	
+				$questionDocuments = $this->indexerLib->getMultipleQuestionsDocuments($baseQuestionId,$batchSize);		
 				echo '<br> Documents generated';
 				echo '<br>sending for indexing';
 				$response = $this->indexerLib->indexDocuments($questionDocuments);
+				die;
 				// echo '<br>';
 				// $count = $count + count($questionDocuments);
 				// echo 'baseQuestion : '.$baseQuestionId.'  ';
