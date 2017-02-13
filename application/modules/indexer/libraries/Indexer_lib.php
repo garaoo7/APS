@@ -107,6 +107,9 @@ class Indexer_lib{
     }
 
     public function indexDocuments($questionDocuments){
+    	echo count($questionDocuments);
+    	print_r($questionDocuments);	
+    	die;
     	$this->ci->load->library('indexer/Curl');
         $this->curlLib = new Curl();
         $updateUrl = SOLR_UPDATE_URL;
