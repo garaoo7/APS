@@ -56,7 +56,7 @@ class Indexer_lib{
 
     public function createDocuments($questionsData){
     	$delimiter  = '|::|';
-    	$completeXML = array();
+    	$completeXML = '';
         //print_r($questionsData);die;
     	foreach ($questionsData as $question) {
             //print_r($question);die;
@@ -64,9 +64,6 @@ class Indexer_lib{
     		$tagId = explode($delimiter,$question['tagId']);
     		$tagName = explode($delimiter,$question['tagName']);
     		$tagQualityScore = explode($delimiter,$question['tag_quality_score']);
-    		// print_r($tagId);
-    		// print_r($tagName);
-    		// print_r($tagQualityScore);
             if($tagId){
                 $size = count($tagId);
                 for($i=0;$i<$size;$i++){
@@ -74,40 +71,27 @@ class Indexer_lib{
                     $question['tag_quality_'.$tagId[$i]] = $tagQualityScore[$i];
                 }
             }
-        		
 
             $question['questionCreationDate'] = str_replace(' ', 'T', $question['questionCreationDate']).'Z';
-    		// //
-    		// if($size>1){
-    		// 	print_r($size);
-    		// echo '<pre>'.print_r($tagDetails,true).'</pre>';	
-    		// 	die;;
-    		// }
-
-    		// echo '<pre>'.print_r($question,true).'</pre>';	
-    		
-    		// die;
-    		// $question = array();
-    		// // $question['id']
     		unset($question['tagId']);
     		unset($question['tagName']);
     		unset($question['tag_quality_score']);
-    		$completeXML[] = $this->generateXML($question);
+    		$completeXML .= $this->generateXML($question);
     	}
+        $completeXML = '<add>'.$completeXML.'</add>';
 	return $completeXML;
     }
 
     public function generateXML($questionData){
-    	$xml = '<add><doc>';
+    	$xml = '<doc>';
     	foreach ($questionData as $key => $value) {
     		$xml  = $xml . '<field name ="'.$key.'"><![CDATA['.htmlentities(strip_tags($this->asciConvert($value))).']]></field>';
     	}
-    	$xml .= '</doc></add>';
+    	$xml .= '</doc>';
     	return $xml;
     }
     public function asciConvert($string){
     	return $string;
-
     	//return preg_replace_callback('/[^\x20-\x7F]/e', ' ', $string);
     }
 
@@ -116,8 +100,12 @@ class Indexer_lib{
         $this->curlLib = new Curl();
         $updateUrl = SOLR_UPDATE_URL;
         echo $updateUrl;
-        foreach ($questionDocuments as $key => $value) {
-        	$response = $this->curlLib->curl($updateUrl, $value,1);   
+
+        if(!is_array($questionDocuments)){
+            $questionDocuments = array($questionDocuments);
+        }
+        foreach ($questionDocuments as $key => $document) {
+        	$response = $this->curlLib->curl($updateUrl, $document,1);   
         	echo '<pre>'.print_r($response).'</pre>';
         }
      	$response = $this->commit('APS','update');
@@ -128,7 +116,7 @@ class Indexer_lib{
     	$this->ci->load->library('indexer/Curl');
         $this->curlLib = new Curl();
         if($handler=='update'){
-        	$response = $this->curlLib->curl(SOLR_UPDATE_URL.'?commit=true',array());
+        	$response = $this->curlLib->curl(SOLR_UPDATE_URL.'?commit=true','');
         	echo "<br>inside<br>";
         	print_r($response);
         	die;
