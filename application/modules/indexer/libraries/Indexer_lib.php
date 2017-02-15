@@ -131,7 +131,7 @@ class Indexer_lib{
     	$this->ci->load->library('indexer/Curl');
         $this->curlLib = new Curl();
         if($handler=='update'){
-        	$response = $this->curlLib->curl(SOLR_UPDATE_URL.'?commit=true',array());
+        	$response = $this->curlLib->curl(SOLR_UPDATE_URL.'?commit=true');
         	echo "<br>inside<br>";
         	print_r($response);
         	die;

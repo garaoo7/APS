@@ -49,5 +49,29 @@ class Index extends MX_Controller{
 		 $this->indexerLib = new indexer_lib();		
 		$response = $this->indexerLib->generateUrlOnSearch();
 	}
+
+	public function temp(){
+		$url= 'http://localhost:8983/solr/APS/update?commit=true';
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 8);
+        curl_setopt($ch, CURLOPT_POST, 1);
+		$result = curl_exec($ch);
+		var_dump($result);
+		curl_close($ch);
+		echo 'sad';
+		print_r($result);
+die;
+		$this->load->library('indexer/Curl');
+
+
+        $this->curlLib = new Curl();
+        if(1 || $handler=='update'){
+        	$response = $this->curlLib->curl(SOLR_UPDATE_URL.'?commit=true');
+        	echo "<br>inside<br>";
+        	print_r($response);
+        	die;
+        }
+	}
 }
 ?>
