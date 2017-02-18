@@ -45,8 +45,7 @@ class Question_model extends MY_Model{
 				    q.viewCount,
 				    q.ansCount,
 				    group_concat(t.tagId SEPARATOR '|::|') as tagId,
-				    group_concat(t.tagName SEPARATOR '|::|') as tagName,
-				    group_concat(t.tag_quality_score SEPARATOR '|::|') as tag_quality_score
+				    group_concat(t.tagName SEPARATOR '|::|') as tagName				    
 				FROM
 				    questions q
 				        LEFT JOIN
@@ -122,5 +121,19 @@ class Question_model extends MY_Model{
   		}
   		return true;
   	}
+
+  	public function getTagCount(){
+		$this->_init('write');
+		$sql = "select count(*) as tagCount from tag where status = 'live'";
+		$result = $this->dbHandle->query($sql)->result_array();
+		return $result;
+	}
+
+	public function getTagDetails($start, $count){
+		$this->_init('write');
+		$sql = "select tagId, tagName, tag_quality_score as tagQualityScore from tag where status = 'live' limit $start , $count";
+		$result = $this->dbHandle->query($sql)->result_array();
+		return $result;	
+	}
 }?>
 
