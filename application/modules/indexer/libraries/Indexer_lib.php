@@ -149,6 +149,7 @@ class Indexer_lib{
     }
 
     private function _processTagDetails($tagDetails){
+        // print_r()($tagDetails);
         foreach ($tagDetails as $key => $tagDetail) {
             $tagDetails[$key]['unique_id'] = 'tag'.$tagDetail['tagId'];
             $tagDetails[$key]['faceType'] = 'tag';

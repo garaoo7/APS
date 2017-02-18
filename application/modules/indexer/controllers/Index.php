@@ -26,11 +26,14 @@ class Index extends MX_Controller{
 					//echo '<pre>'.print_r($tagDetails,true).'</pre>';
 					$tagDocuments = $this->indexerLib->createDocumetForIndexingTags($tagDetails);
 					//print_r($tagDocuments);die;
+					unset($tagDetails);
 					$response = $this->indexerLib->indexDocuments($tagDocuments);
+					unset($tagDocuments);
 					echo $response.'<br>';
 					ob_flush();
 					flush();
 					$start += $batchSize;
+					echo '<br>'.memory_get_peak_usage().'<br>';
 				}
 			}
 		}else if($type == 'single' && !empty($tagId)){
@@ -40,33 +43,21 @@ class Index extends MX_Controller{
 
 	public function indexQuestionDocuments($type = 'single',$batchSize = 30,$questionId=''){
 		if($type =='all'){
-			$minQuestionId 	=	(int) 	$this->indexerLib->getMinimumQuestionId();
-			$maxQuestionId  = 	(int)	$this->indexerLib->getMaximumQuestionId();
-			$batchSize 		= 	(int)	$batchSize;
-			echo 'Min Question id : '.$minQuestionId.'<br>'; 
+			$minQuestionId =(int) $this->indexerLib->getMinimumQuestionId();
+			$maxQuestionId  = (int)$this->indexerLib->getMaximumQuestionId();
+			$batchSize = (int)$batchSize;
+			echo 'Min Question id : '.$minQuestionId.'<br>';
 			echo 'Max Question id : '.$maxQuestionId.'<br>';
-<<<<<<< HEAD
-			$minQuestionId = 3440070;
-=======
->>>>>>> d582dc4f4cba2b45fe336100f6f660f7c0baa1d8
 			//$questionCount = $this->indexerLib->getQuestionCount();
 			$baseQuestionId = $minQuestionId;
-			// $count = 0;
+			$count = 0;
 			while($baseQuestionId<=$maxQuestionId){
-				echo "<br>Fetching Documents with baseQuestionId : ".$baseQuestionId. " and batchSize=".$batchSize;
+				echo "Fetching Documents with baseQuestionId : ".$baseQuestionId. " and batchSize=".$batchSize;
 				$questionDocuments = $this->indexerLib->getMultipleQuestionsDocuments($baseQuestionId,$batchSize);		
-				// die("sad");
 				echo '<br> Documents generated';
 				echo '<br>sending for indexing';
 				$response = $this->indexerLib->indexDocuments($questionDocuments);
-<<<<<<< HEAD
-				if(!$response){
-					echo "indexing failed";
-					break;
-				}
-=======
 				echo $response;
->>>>>>> d582dc4f4cba2b45fe336100f6f660f7c0baa1d8
 				ob_flush();
 				flush();
 				$baseQuestionId = $baseQuestionId+$batchSize;
@@ -75,45 +66,12 @@ class Index extends MX_Controller{
 		else if($type =='single' && !empty($questionId)){
 
 		}
-<<<<<<< HEAD
-		echo "<br>please make a commit<br>";
-	}
-
-	public function indexTags(){
-
-	}
-=======
 	}	
->>>>>>> d582dc4f4cba2b45fe336100f6f660f7c0baa1d8
 
 	public function getDataFromSolr(){
 		$this->load->library('indexer/indexer_lib');
 		 $this->indexerLib = new indexer_lib();		
 		$response = $this->indexerLib->generateUrlOnSearch();
-	}
-
-	public function temp(){
-		$url= 'http://localhost:8983/solr/APS/update?commit=true';
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 8);
-        curl_setopt($ch, CURLOPT_POST, 1);
-		$result = curl_exec($ch);
-		var_dump($result);
-		curl_close($ch);
-		echo 'sad';
-		print_r($result);
-die;
-		$this->load->library('indexer/Curl');
-
-
-        $this->curlLib = new Curl();
-        if(1 || $handler=='update'){
-        	$response = $this->curlLib->curl(SOLR_UPDATE_URL.'?commit=true');
-        	echo "<br>inside<br>";
-        	print_r($response);
-        	die;
-        }
 	}
 }
 ?>

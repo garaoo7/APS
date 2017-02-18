@@ -319,8 +319,64 @@
    <!-- <copyField source="name" dest="alphaNameSort"/> -->
  
   <types>
-<fieldType name="text" class="solr.TextField" positionIncrementGap="100"/>
 <fieldType name="APSint" class="solr.TrieIntField" precisionStep="1" positionIncrementGap="0"/>
+
+<fieldType name="text" class="solr.TextField" positionIncrementGap="100">
+    <analyzer type="index">
+      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+      <filter class="solr.WordDelimiterFilterFactory"
+                    generateWordParts="1"
+                    splitOnCaseChange="0"
+                    splitOnNumerics="0"
+                    stemEnglishPossessive="1"
+                    preserveOriginal="0"
+                    catenateWords="1"
+                    generateNumberParts="1"
+                    catenateNumbers="0"
+                    catenateAll="1"
+                    />
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_en.txt"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.ASCIIFoldingFilterFactory"/>
+      <filter class="solr.KStemFilterFactory"/>
+    </analyzer>
+<analyzer type="query">
+
+    <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+    <filter class="solr.WordDelimiterFilterFactory"
+                    generateWordParts="1"
+                    splitOnCaseChange="0"
+                    splitOnNumerics="0"
+                    stemEnglishPossessive="1"
+                    preserveOriginal="0"
+                    catenateWords="1"
+                    generateNumberParts="1"
+                    catenateNumbers="0"
+                    catenateAll="1"
+                    />
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_en.txt"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.ASCIIFoldingFilterFactory"/>
+      <filter class="solr.KStemFilterFactory"/>
+    <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
+</analyzer>
+</fieldType>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     <!-- field type definitions. The "name" attribute is
        just a label to be used by field definitions.  The "class"

@@ -10,7 +10,7 @@ class Curl {
     private $curlErrorMessage = '';
     private $curlHeader = '';
     private $recognizeMobileRequest = 0;
-    private $isRequestToSolr = 0;
+    private $isRequestToSolr = 1;
 
     public function __construct() {
         

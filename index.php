@@ -1,4 +1,9 @@
 <?php
+
+
+	function _p($data){
+		echo '<pre>'.print_r($data,true).'</pre>';
+	}
 /**
  * CodeIgniter
  *
