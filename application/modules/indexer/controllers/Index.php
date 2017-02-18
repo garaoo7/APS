@@ -8,14 +8,43 @@ class Index extends MX_Controller{
 		 $this->indexerLib = new indexer_lib();
 	}
 
-	public function indexDocuments($type = 'single',$batchSize = 30,$questionId=''){
+	public function indexTags($type='single', $batchSize = 30, $tagId=''){
+		if($type == 'all'){
+			$getTagCount = $this->indexerLib->getTagCount();			
+			if($getTagCount == 0){
+				echo "No entry for live tag in Tag table.<br>";
+				echo "No indexing required for tags.<br>";
+			}else{
+				$noOfBatches = ceil($getTagCount/$batchSize);
+				//$noOfBatches = 1;
+				$start = 0;
+				$count = $batchSize;
+				//$count=1;
+				for($batchNo=1; $batchNo <= $noOfBatches; $batchNo++){
+					echo 'Fatching row from '.$start.' To '.($start+$count-1).'<br>';
+					$tagDetails = $this->indexerLib->getTagDetails($start, $count);
+					//echo '<pre>'.print_r($tagDetails,true).'</pre>';
+					$tagDocuments = $this->indexerLib->createDocumetForIndexingTags($tagDetails);
+					//print_r($tagDocuments);die;
+					$response = $this->indexerLib->indexDocuments($tagDocuments);
+					echo $response.'<br>';
+					ob_flush();
+					flush();
+					$start += $batchSize;
+				}
+			}
+		}else if($type == 'single' && !empty($tagId)){
+
+		}
+	}
+
+	public function indexQuestionDocuments($type = 'single',$batchSize = 30,$questionId=''){
 		if($type =='all'){
 			$minQuestionId =(int) $this->indexerLib->getMinimumQuestionId();
 			$maxQuestionId  = (int)$this->indexerLib->getMaximumQuestionId();
 			$batchSize = (int)$batchSize;
 			echo 'Min Question id : '.$minQuestionId.'<br>';
 			echo 'Max Question id : '.$maxQuestionId.'<br>';
-			$minQuestionId = 3000000;
 			//$questionCount = $this->indexerLib->getQuestionCount();
 			$baseQuestionId = $minQuestionId;
 			$count = 0;
@@ -25,9 +54,7 @@ class Index extends MX_Controller{
 				echo '<br> Documents generated';
 				echo '<br>sending for indexing';
 				$response = $this->indexerLib->indexDocuments($questionDocuments);
-				die;
 				echo $response;
-				die;
 				ob_flush();
 				flush();
 				$baseQuestionId = $baseQuestionId+$batchSize;
@@ -36,7 +63,7 @@ class Index extends MX_Controller{
 		else if($type =='single' && !empty($questionId)){
 
 		}
-	}
+	}	
 
 	public function getDataFromSolr(){
 		$this->load->library('indexer/indexer_lib');
