@@ -45,3 +45,10 @@ create table questionTag(
     tagId int(10),
     status enum('live','deleted') NOT NULL DEFAULT 'live'
 );
+
+
+create index questionId on questions (questionId);
+create index tagId on tag(tagId);
+create index questionTag on questionTag(questionId,tagId);
+
+SET GLOBAL group_concat_max_len=100999;

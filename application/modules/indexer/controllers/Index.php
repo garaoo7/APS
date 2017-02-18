@@ -10,30 +10,26 @@ class Index extends MX_Controller{
 
 	public function indexDocuments($type = 'single',$batchSize = 30,$questionId=''){
 		if($type =='all'){
-			$minQuestionId =(int) $this->indexerLib->getMinimumQuestionId();
-			$maxQuestionId  = (int)$this->indexerLib->getMaximumQuestionId();
-			$batchSize = (int)$batchSize;
-			echo 'Min Question id : '.$minQuestionId.'<br>';
+			$minQuestionId 	=	(int) 	$this->indexerLib->getMinimumQuestionId();
+			$maxQuestionId  = 	(int)	$this->indexerLib->getMaximumQuestionId();
+			$batchSize 		= 	(int)	$batchSize;
+			echo 'Min Question id : '.$minQuestionId.'<br>'; 
 			echo 'Max Question id : '.$maxQuestionId.'<br>';
-			$minQuestionId = 3500000;
+			$minQuestionId = 3440070;
 			//$questionCount = $this->indexerLib->getQuestionCount();
 			$baseQuestionId = $minQuestionId;
-			$count = 0;
+			// $count = 0;
 			while($baseQuestionId<=$maxQuestionId){
-				echo "Fetching Documents with baseQuestionId : ".$baseQuestionId. " and batchSize=".$batchSize;
+				echo "<br>Fetching Documents with baseQuestionId : ".$baseQuestionId. " and batchSize=".$batchSize;
 				$questionDocuments = $this->indexerLib->getMultipleQuestionsDocuments($baseQuestionId,$batchSize);		
+				// die("sad");
 				echo '<br> Documents generated';
 				echo '<br>sending for indexing';
 				$response = $this->indexerLib->indexDocuments($questionDocuments);
-				die;
-				// echo '<br>';
-				// $count = $count + count($questionDocuments);
-				// echo 'baseQuestion : '.$baseQuestionId.'  ';
-				// $temp = $baseQuestionId+$batchSize;
-				// echo 'maxQuestionId : '.$temp.' ';
-				// echo 'count : '.($count).'<br>';
-				echo $response;
-				die;
+				if(!$response){
+					echo "indexing failed";
+					break;
+				}
 				ob_flush();
 				flush();
 				$baseQuestionId = $baseQuestionId+$batchSize;
@@ -42,6 +38,11 @@ class Index extends MX_Controller{
 		else if($type =='single' && !empty($questionId)){
 
 		}
+		echo "<br>please make a commit<br>";
+	}
+
+	public function indexTags(){
+
 	}
 
 	public function getDataFromSolr(){

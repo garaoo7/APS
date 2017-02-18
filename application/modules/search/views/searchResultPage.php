@@ -11,7 +11,7 @@
 		
 		</header>
 		
-		<div class="main-div" style="padding-top: 14%;">
+		<div class="main-div">
 			<form name="aps" action="<?php echo base_url('search/search')?>" method="POST"><br>	
 				<div>
 					<input type="text" class="search" id="searchBox" name ='searchText' placeholder="Search a question">
@@ -19,6 +19,37 @@
 				</div>
 				<div id ="recommdated-questions" class="recommdated-questions"></div>
 			</form>
+		</div>
+
+
+		<div style="margin-top: 75px;">
+		<div style="float: left">
+		Facets:
+		<?php 
+		foreach ($facets as $facetName => $facetData) {
+			echo '<p>'.$facetName.'</p>';
+			foreach ($facetData as $facet) {
+					echo $facet['name'].'('.$facet['count'].')';	
+				}	
+		}
+		?>
+
+		</div>
+		<div style="margin-left: 25%">
+				<?php 
+				foreach ($questions as $question) {
+					echo '<p><b>'.$question['title'].'</b></p>';
+					echo '<div style="padding-left:15px">';
+					echo '<p >'.$question['description'].'</p>';
+					echo 'Tags: ';
+					foreach ($question['tags'] as $tag) {
+						echo $tag.' ';
+					}
+					echo '</div>';
+				}
+				?>
+
+		</div>
 		</div>
 		
 		<!-- <footer>

@@ -3,6 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 
 define('SOLR_UPDATE_URL','http://localhost:8983/solr/APS/update');
+define('SOLR_SELECT_URL','http://localhost:8983/solr/APS/select');
 
 
 /*

@@ -2,13 +2,31 @@
 
 class Search extends MX_Controller{
 
-	private $indexer;
+	private $searchLib;
 	private $questionModel;
 	public function __construct(){
 		$this->load->model('common/Question_model');
 		$this->load->library('search/search_lib');
 		$this->questionModel = new question_model();
-		$this->indexer 	     = new search_lib();
+		$this->searchLib 	 = new search_lib();
+	}
+	public function index(){
+		$inputQuery 	= $this->input->post('searchText',true);
+		$resultTuples 	= $this->searchLib->getResultTuples($inputQuery);
+
+		$resultTuples = array();
+		$resultTuples['questions'][0] = array(
+							'title'=>'where to do mba in delhi??',
+							'description' => 'i want to do mba where??',
+							'tags' => array('mba','delhi'),
+							'creationDate' => '2016-9-22',
+							'viewCount'	=> '100',
+							'ansCount' => '20'
+							);
+		$resultTuples['facets'] = array('tags' => array(0=>array('name'=>'mba','count'=>'10')),
+									);
+		$this->load->view('search/searchResultPage',$resultTuples);
+
 	}
 	public function getSuggestion(){
 		$searchTerm = $this->input->get('searchTerm',true);

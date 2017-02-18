@@ -89,11 +89,8 @@ class Curl {
     }
 
     public function curl($url, $content = '', $getCurlHeader = '') {
-        echo($url);
-        
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_VERBOSE, 0);
-        // curl_setopt($ch, CURLOPT_PORT, );
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         if ($this->getRecognizeMobileRequest()) {
@@ -113,7 +110,7 @@ class Curl {
         curl_setopt($ch, CURLOPT_HEADER, $curlHeader);
         curl_setopt($ch, CURLOPT_TIMEOUT, 8);
         curl_setopt($ch, CURLOPT_POST, 1);
-        // curl_setopt($ch, CURLOPT_POSTFIELDS, $content);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $content);
         $curlObjectAfterExecution = $this->_executeCurlRequest($ch);
         return $curlObjectAfterExecution;
     }
@@ -124,20 +121,15 @@ class Curl {
         $curlEndTime = microtime(true);
         $this->setCurlStartTime($curlStartTime);
         $this->setCurlEndTime($curlEndTime);
-        echo curl_errno($curlObject);
-        
         if (curl_errno($curlObject)) {
             $this->setCurlErrorCode(curl_errno($curlObject));
             $this->setCurlErrorMessage(curl_error($curlObject));
         } else {
             $curlReturnCode = curl_getinfo($curlObject, CURLINFO_HTTP_CODE);
-            echo $curlReturnCode;
             $this->setCurlReturnCode($curlReturnCode);
             $this->setResult($result);
         }
         curl_close($curlObject);
-        echo '<pre>'.print_r($this,true).'</pre>';
-        die;
         return $this;
     }
 
