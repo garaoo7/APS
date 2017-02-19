@@ -14,8 +14,7 @@ class Search extends MX_Controller{
 	public function index(){
 		$inputQuery 	= $this->input->post('searchText',true);
 		$resultTuples 	= $this->searchLib->getResultTuples($inputQuery);
-
-		$resultTuples = array();
+		/*$resultTuples = array();
 		$resultTuples['questions'][0] = array(
 							'title'=>'where to do mba in delhi??',
 							'description' => 'i want to do mba where??',
@@ -24,8 +23,8 @@ class Search extends MX_Controller{
 							'viewCount'	=> '100',
 							'ansCount' => '20'
 							);
-		$resultTuples['facets'] = array('tags' => array(0=>array('name'=>'mba','count'=>'10')),
-									);
+		$resultTuples['facets'] = array('tags' => array(0=>array('name'=>'mba','count'=>'10')),);*/
+									
 		$this->load->view('search/searchResultPage',$resultTuples);
 
 	}

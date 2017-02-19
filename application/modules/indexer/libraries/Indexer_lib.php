@@ -114,7 +114,6 @@ class Indexer_lib{
         if(!is_array($documents)){
             $documents = array($documents);
         }
-
         foreach ($documents as $key => $document) {
         	$response = $this->curlLib->curl($updateUrl, $document,1);   
         	echo '<pre>'.print_r($response).'</pre>';

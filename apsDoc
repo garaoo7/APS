@@ -61,4 +61,4 @@ mysql -u root -p  shiksha  < /home/APS-shiksha/shiksha_tags.sql
 
 
 Deleting all document from solr (APS): 
-curl "localhost:8983/solr/APS/update?commit=true" -H "Content-Type: text/xml" --data-binary '<delete><query>*:*</query></delete>'
+curl "localhost:8983/solr/APS/update?commit=true" -H "Content-Type: text/xml" --data-binary '<delete><query>*:*</query></delete>';

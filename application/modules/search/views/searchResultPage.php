@@ -24,12 +24,13 @@
 
 		<div style="margin-top: 75px;">
 		<div style="float: left">
-		Facets:
-		<?php 
+		<b style="font-size:20px">Facets:</b>
+		<?php
+		//_p($facets);die;
 		foreach ($facets as $facetName => $facetData) {
-			echo '<p>'.$facetName.'</p>';
+			echo '<p><b>'.$facetName.'</b></p>';
 			foreach ($facetData as $facet) {
-					echo $facet['name'].'('.$facet['count'].')';	
+					echo $facet['name'].' ('.$facet['count'].')<br>';
 				}	
 		}
 		?>
@@ -38,13 +39,16 @@
 		<div style="margin-left: 25%">
 				<?php 
 				foreach ($questions as $question) {
-					echo '<p><b>'.$question['title'].'</b></p>';
+					echo '<p><b>'.$question['questionTitle'].'</b></p>';
 					echo '<div style="padding-left:15px">';
 					echo '<p >'.$question['description'].'</p>';
-					echo 'Tags: ';
-					foreach ($question['tags'] as $tag) {
-						echo $tag.' ';
+					if($question['tags']){
+						echo '<b>Tags:</b> ';
+						foreach ($question['tags'] as $tag) {
+							echo $tag.' || ';
+						}
 					}
+						
 					echo '</div>';
 				}
 				?>
