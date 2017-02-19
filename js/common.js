@@ -14,7 +14,7 @@ var apsSearchClass = function(obj){
     $(elementSelector).on(eventName,function(event) {
       switch(elementSelector) {
         case '#searchBox':
-          	autoSuggestionObj.getSuggestions($(this).val());
+          	//autoSuggestionObj.getSuggestions($(this).val());
         break;
 
         case '.recommdated-question':
