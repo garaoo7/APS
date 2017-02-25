@@ -90,3 +90,19 @@ defined('EXIT_USER_INPUT')     OR define('EXIT_USER_INPUT', 7); // invalid user 
 defined('EXIT_DATABASE')       OR define('EXIT_DATABASE', 8); // database error
 defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automatically-assigned error code
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
+
+
+global $viewCountRange;
+$viewCountRange= array(
+	'0-1000' => '0 To 1000',
+	'1001-5000' => '1001 To 5000',
+	'5001-10000' => '50001 To 10000',
+	'10001-10000000' => '10001 To *'
+);
+
+global $ansCountRange;
+$ansCountRange= array(
+	'0-50' => '0 To 50',
+	'51-100' => '51 To 100',
+	'101-1000000' => '101 To *'
+);

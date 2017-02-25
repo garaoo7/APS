@@ -9,11 +9,10 @@ class Search extends MX_Controller{
 		$this->load->library('search/search_lib');
 		$this->questionModel = new question_model();
 		$this->searchLib 	 = new search_lib();
-
 	}
 	public function index(){
 		$inputQuery 	= $this->input->post('searchText',true);
-		$resultTuples 	= $this->searchLib->getResultTuples($inputQuery);
+		$resultTuples 	= $this->searchLib->getResultTuples($inputQuery,array());
 		/*$resultTuples = array();
 		$resultTuples['questions'][0] = array(
 							'title'=>'where to do mba in delhi??',
