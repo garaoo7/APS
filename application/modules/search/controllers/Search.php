@@ -47,6 +47,18 @@ class Search extends MX_Controller{
 	}
 
 	function getFilteredResult(){
+
+		$values = array();
+parse_str($_POST['data'], $values);
+_p($values);die;
+		$v = $this->input->post("data");
+		$v = serialize($v);
+		_p($v);die;
+		_p($v['Tag']);
+
+		
+		_p($v);
+		_p($v['Tag']);
 		_p('getFilteredResult');die;
 	}
 }

@@ -47,7 +47,7 @@ function getFilteredResults(){
   $.ajax({
         type  : "POST",
         url   : base_url+'/search/Search/getFilteredResult',
-        data  : $("#questionFilters").serialize()+"&AJAX=1",
+        data  : {'data': $("#questionFilters").serialize()},
         beforeSend  : function(){
             //showFilterLoader();
         }
