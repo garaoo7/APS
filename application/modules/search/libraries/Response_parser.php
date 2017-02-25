@@ -12,9 +12,9 @@ class Response_parser
 		$data['facet'] = $this->_prepareFacets($response['facet_counts']);
 		//_p($data['facets']);die;
 		//_p($data);die;
-		$data['facets']['View Count'] = $data['facet']['queryFacet']['viewCountFacet'];
-		$data['facets']['Answer Count'] = $data['facet']['queryFacet']['ansCountFacet'];
-		$data['facets']['Tag'] = $data['facet']['fieldFacet'] ? $data['facet']['fieldFacet']['tagFacet']: array();
+		$data['facets']['Views'] = $data['facet']['queryFacet']['viewCountFacet'];
+		$data['facets']['Answers'] = $data['facet']['queryFacet']['ansCountFacet'];
+		$data['facets']['Tags'] = $data['facet']['fieldFacet'] ? $data['facet']['fieldFacet']['tagFacet']: array();
 		unset($data['facet']);
 		return $data;
 	}
@@ -130,6 +130,7 @@ class Response_parser
 			$viewCountFacet[] = array(
 				'name'	=> $viewCountRange[$range],
 				'count' => $count,
+				'id'    => $range
 				);
 		}
 		//_p($viewCountFacet);die;
@@ -146,6 +147,7 @@ class Response_parser
 			$ansCountFacet[] = array(
 				'name'	=> $ansCountRange[$range],
 				'count' => $count,
+				'id'    => $range
 				);
 		}
 		//_p($viewCountFacet);die;

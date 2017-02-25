@@ -13,6 +13,8 @@ class Search extends MX_Controller{
 	public function index(){
 		$inputQuery 	= $this->input->post('searchText',true);
 		$resultTuples 	= $this->searchLib->getResultTuples($inputQuery,array());
+
+		$resultTuples['inputQuery'] = $inputQuery;
 		/*$resultTuples = array();
 		$resultTuples['questions'][0] = array(
 							'title'=>'where to do mba in delhi??',
@@ -27,6 +29,27 @@ class Search extends MX_Controller{
 		$this->load->view('search/searchResultPage',$resultTuples);
 
 	}
+
+	public function getFilteredResult(){
+		$inputQuery = $this->input->post('inputQuery',true);
+		$isAjax 	= $this->input->post('isAjax',true);
+		$filters 	= $this->input->post('filters',true);
+		$resultTuples = $this->searchLib->getResultTuples($inputQuery,$filters);
+		$resultTuples['inputQuery'] = $inputQuery;
+		//_p($filters);die;
+		$appliedFilters = array();
+		if(!empty($filters)){
+			foreach ($filters as $key => $value) {
+				$appliedFilters[$value['name']][$value['value']] = 1;
+			}
+		}
+			
+		$resultTuples['appliedFilters'] = $appliedFilters;
+		echo $this->load->view('search/content',$resultTuples,true);
+	}
+
+
+
 	public function getSuggestion(){
 		$searchTerm = $this->input->get('searchTerm',true);
 		$recommendateQuestions = array(
@@ -46,8 +69,6 @@ class Search extends MX_Controller{
 		exit();
 	}
 
-	function getFilteredResult(){
-		_p('getFilteredResult');die;
-	}
+
 }
 ?>

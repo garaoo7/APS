@@ -1,7 +1,7 @@
 var apsSearchClass = function(obj){
   var self = this, bindElements = {};
   bindElements['keyup'] = ['#searchBox'];
-  bindElements['click'] = ['#searchButton'];
+  bindElements['click'] = ['#searchButton','#questionFilters input[type=checkbox]'];
   this.bindPageElements = function() {
     for(var eventName in bindElements) {
           for(var elementSelector in bindElements[eventName]) {
@@ -11,7 +11,7 @@ var apsSearchClass = function(obj){
   }
   
   this.bindEvents = function(eventName, elementSelector) {
-    $(elementSelector).on(eventName,function(event) {
+    $(document).on(eventName, elementSelector,function(event) {
       switch(elementSelector) {
         case '#searchBox':
           	//autoSuggestionObj.getSuggestions($(this).val());
@@ -22,6 +22,10 @@ var apsSearchClass = function(obj){
             break;
         case '#searchButton':
             searchResultPage();
+            break;
+        case '#questionFilters input[type=checkbox]':
+            getFilteredResults();
+            break;
       }
     });
   }
@@ -36,24 +40,25 @@ $(document).ready(function(){
 })
 
 
-function initializeFilters(){
-  $("#questionFilters input[type=checkbox]").on("click",function(){
-    getFilteredResults();
-  });
-}
-
 function getFilteredResults(){
   console.log($("#questionFilters").serialize());
+  var filters  = $('#questionFilters').serializeArray();
+  var inputQuery = $('#searchBox').val();
+  var postData = {filters:filters,inputQuery:inputQuery,isAjax:1}
+  // postData['filters'] = filters;
+  // postData['inputQuery'] = inputQuery;
+  // postData['isAjax'] = 1;
   $.ajax({
         type  : "POST",
-        url   : base_url+'/search/Search/getFilteredResult',
-        data  : $("#questionFilters").serialize()+"&AJAX=1",
+        url   : base_url+'search/Search/getFilteredResult',
+        data  : postData,
         beforeSend  : function(){
             //showFilterLoader();
         }
     })
     .done(function( res ) {
-        res = JSON.parse(res);
+        $('#content').html(res);
+        // apsObj.bindPageElements();
     });
 }
 

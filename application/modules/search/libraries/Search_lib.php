@@ -40,7 +40,6 @@ class Search_lib{
         $facetComponents = $this->_getFacetComponent($tags);
         $urlComponents = array_merge($urlComponents, $facetComponents);
         $urlComponents= implode('&', $urlComponents);
-        
         $result = $this->curlLib->curl(SOLR_SELECT_URL,$urlComponents)->getResult();
         //_p($result);die;	
 		$result = unserialize($result);
@@ -50,20 +49,38 @@ class Search_lib{
 
 	private function _prepareAppliedFilter($appliedFilters){
 		$urlComponents = array();
-		// tag filter
-		if(!empty($appliedFilters['tag']) && count($appliedFilters['tag']) > 0){
-			foreach ($appliedFilters['tag'] as $key => $value) {
-				$urlComponents[] = 'fq='.$key.':'.$value;
-			}
-		}
+		if(empty($appliedFilters))
+			return $urlComponents;
 
-		// view count filter
-		if(!empty($appliedFilters['views']) && count($appliedFilters['views']) > 0){
-			foreach ($appliedFilters['views'] as $views) {
-				$view = explode('-', $views);
-				$urlComponents[] = 'fq=viewCount:['.$view[0].' To '.$view[1].']';
+		foreach ($appliedFilters as $filter) {
+			switch ($filter['name']) {
+				case 'Views':
+					$urlComponents[] = 'fq=viewCount'.':['.str_replace('-', ' TO ',$filter['value']).']';
+				break;
+				case 'Answers':
+					$urlComponents[] = 'fq=ansCount'.':['.str_replace('-', ' TO ',$filter['value']).']';
+				break;
+				case 'Tags':
+					$urlComponents[] = 'fq=tag_name_'.$filter['value'].':'.'*';
+				break;
+				
 			}
 		}
+		//_p($urlComponents);die;
+		// tag filter
+		// if(!empty($appliedFilters['tag']) && count($appliedFilters['tag']) > 0){
+		// 	foreach ($appliedFilters['tag'] as $key => $value) {
+		// 		$urlComponents[] = 'fq='.$key.':'.$value;
+		// 	}
+		// }
+
+		// // view count filter
+		// if(!empty($appliedFilters['views']) && count($appliedFilters['views']) > 0){
+		// 	foreach ($appliedFilters['views'] as $views) {
+		// 		$view = explode('-', $views);
+		// 		$urlComponents[] = 'fq=viewCount:['.$view[0].' To '.$view[1].']';
+		// 	}
+		// }
 
 		// answer count flter
 		return $urlComponents;
