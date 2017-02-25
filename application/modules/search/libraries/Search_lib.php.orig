@@ -17,8 +17,15 @@ class Search_lib{
 		if($inputQuery==''){
 			return;
 		}
+<<<<<<< HEAD
 		$tags = $this->_getTags($inputQuery);//_p($tags);die;
 		$result = $this->_getQuestions($inputQuery,$tags, $appliedFilters);
+=======
+		$tags = $this->_getTags($inputQuery);
+		_p($tags);
+		die;
+		$result = $this->_getQuestions($inputQuery,$tags);
+>>>>>>> b353af99d0c82043a45f67a73fe549c791f73c05
 		//_p($result);die;
 		$data = $this->_prepareResponseData($result);
 
@@ -284,19 +291,26 @@ class Search_lib{
 	private function _getTags($inputQuery){
 		$urlComponents = array();
 		$urlComponents[] = 'q='.$inputQuery;
+		$urlComponents[] = 'start=0';
+		$urlComponents[] = 'rows=100';
 		$urlComponents[] = 'wt=phps';
 		$urlComponents[] = 'defType=edismax';
 		$urlComponents[] = 'fq=faceType:tag';
 		$urlComponents[] = 'df=tagName';
 		$urlComponents[] = 'fl=tagId,tagName,tagQualityScore';
+<<<<<<< HEAD
+		//_p($urlComponents);die;
+=======
 		$urlComponents[] = 'bq=tagQualityScore:[0 TO 0.25]^2000 tagQualityScore:[0.25 TO 0.5]^4000 tagQualityScore:[0.5 TO 0.75]^64000 tagQualityScore:[0.75 TO *]^128000';
 		$urlComponents[] = 'start=0&rows=20';
 
+>>>>>>> b353af99d0c82043a45f67a73fe549c791f73c05
 		$urlComp = implode('&', $urlComponents);
 		$this->curlLib->setIsRequestToSolr(1);
 		$result = $this->curlLib->curl(SOLR_SELECT_URL,$urlComp)->getResult();
 		$result = unserialize($result);
 		$tags = $result['response']['docs'];
+		//_p($tags);die;
 		return $tags;
 	}
 

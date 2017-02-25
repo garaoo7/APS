@@ -27,7 +27,8 @@
 
 <field name="tagId" type="string" indexed="true" stored="true"/>
 <field name="tagName" type="text" indexed="true" stored="true"/>
-<field name="tagQualityScore" type="string" stored="true"/>
+<field name="tagQualityScore" type="float" stored="true"/>
+<field name="tagIdNameMap" type="string" multiValued='true' indexed='true' stored="true"/>
 
 <fieldType name="text" class="solr.TextField" positionIncrementGap="100">
 <fieldType name="APSint" class="solr.TrieIntField" precisionStep="1" positionIncrementGap="0"/>

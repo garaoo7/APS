@@ -66,6 +66,9 @@ class Question_model extends MY_Model{
 		// }
 		
 		// echo '<pre>'.print_r($result,true).'</pre>';
+		// _p($sql);
+		// _p($result);
+		// die;
 		return $result;
 // die;
 	}

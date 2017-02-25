@@ -68,6 +68,7 @@ class Indexer_lib{
                 $size = count($tagId);
                 for($i=0;$i<$size;$i++){
                     $question['tag_name_'.$tagId[$i]] = $tagName[$i];
+                    $question['tagIdNameMap'][] = $tagId[$i].'|::|'.$tagName[$i];
                 }
             }
 
@@ -76,7 +77,6 @@ class Indexer_lib{
             $question['faceType'] = 'question';
     		unset($question['tagId']);
     		unset($question['tagName']);
-            
     		$completeXML .= $this->generateXML($question);
     	}
         $completeXML = '<add>'.$completeXML.'</add>';
@@ -84,9 +84,27 @@ class Indexer_lib{
     }
 
     public function generateXML($documents){
+        // _p($documents);
+        // die;
     	$xml = '<doc>';
     	foreach ($documents as $key => $value) {
-    		$xml  = $xml . '<field name ="'.$key.'"><![CDATA['.htmlentities(strip_tags($this->asciConvert($value))).']]></field>';
+            if(!is_array($value)){
+                $value = trim($value);
+                $key = trim($key);
+                if($value!=''){
+                    $xml  = $xml . '<field name ="'.$key.'"><![CDATA['.htmlentities(strip_tags($this->asciConvert($value))).']]></field>';      
+                }
+                
+            }
+            else if(is_array($value)){
+                $key = trim($key);
+                foreach ($value as $individualVal) {
+                    $individualVal = trim($individualVal);
+                    if($individualVal != "") {
+                        $xml  = $xml . '<field name ="'.$key.'"><![CDATA['.htmlentities(strip_tags($this->asciConvert($individualVal))).']]></field>';
+                    }
+                }
+            }
     	}
     	$xml .= '</doc>';
     	return $xml;

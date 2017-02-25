@@ -20,7 +20,8 @@ class Shiksha_question_model extends MY_Model{
 	}
 	public function getShikshaMultipleQuestionsData($offset=0,$batchSize=1){
 		$this->_init('read');
-		$query = "select msgId as questionId,creationDate,userId,msgTxt as title,viewCount,status
+		$query = "select msgId as questionId,creationDate,userId,msgTxt as title,viewCount,status,
+					(select count(*) from messageTable where parentId=questionId and mainAnswerId = 0 and fromOthers='user') as ansCount
 				  from messageTable where parentId =0 and fromOthers = 'user' limit ".$batchSize." offset ".$offset."
 				 ";
 		$result = $this->dbHandle->query($query)->result_array();
