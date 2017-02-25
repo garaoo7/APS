@@ -26,16 +26,19 @@
 		<div style="float: left">
 		<!-- <b style="font-size:20px">Facets:</b> -->
 		<?php
-		$this->load->view('facet');
+		if(!empty($facets)){
+			$this->load->view('facet');
+		}
 		?>
 
 		</div>
 		<div style="margin-left: 25%" id = "questionResult">
 				<?php 
+			if(!empty($questions)){
 				foreach ($questions as $question) {
 					echo '<p><b>'.$question['questionTitle'].'</b></p>';
 					echo '<div style="padding-left:15px">';
-					echo '<p >'.$question['description'].'</p>';
+					// echo '<p >'.$question['description'].'</p>';
 					echo '<p ><b>Answers</b> : '.$question['ansCount'].'&nbsp&nbsp&nbsp&nbsp&nbsp <b>Views</b> : '.$question['viewCount'].'</p>';		
 					if($question['tags']){
 						echo '<b>Tags:</b> ';
@@ -44,7 +47,12 @@
 					}
 					echo '</div>';
 				}
+			}
+			else{
+				echo "No result Found";
+			}
 				?>
+			
 		</div>
 		</div>
 		
