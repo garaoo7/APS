@@ -2,7 +2,9 @@
 	<div class="filters">
 		<?php
 		//_p($appliedFilters);die;
-		foreach ($facets as $facetName => $facetData) { ?>
+		foreach ($facets as $facetName => $facetData) { 
+			if(!empty($facetData)){
+			?>
 				<div><b><?php echo $facetName; ?></b></div>
 				<div>
 					<ul style="list-style:none;max-height:155px;overflow:auto;padding:0px !important">
@@ -20,6 +22,6 @@
 						<?php }} ?>
 					</ul>
 				</div>
-		<?php } ?>
+		<?php }} ?>
 	</div>
 </form>

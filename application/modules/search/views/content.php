@@ -13,6 +13,7 @@
 		<div style="float: left">
 		<!-- <b style="font-size:20px">Facets:</b> -->
 		<?php
+		//_p($facets);die;
 		if(!empty($facets)){
 			$this->load->view('facet');
 		}

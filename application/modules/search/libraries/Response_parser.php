@@ -90,8 +90,10 @@ class Response_parser
 	private function _prepareTagsFacet($data){
 		$tagFacet = array();
 		foreach ($data as $key => $value) {
-			$tagDetails = explode('|::|',$key);
-			$tagFacet[] = array('id'=>$tagDetails[0],'name'=>$tagDetails[1],'count'=>$value);
+			if($value > 0){
+				$tagDetails = explode('|::|',$key);
+				$tagFacet[] = array('id'=>$tagDetails[0],'name'=>$tagDetails[1],'count'=>$value);
+			}
 		}
 		return $tagFacet;
 	}
@@ -127,11 +129,14 @@ class Response_parser
 		global $viewCountRange;
 		//_p($viewCountRange);die;
 		foreach ($viewCountFacetInput as $range => $count) {
-			$viewCountFacet[] = array(
-				'name'	=> $viewCountRange[$range],
-				'count' => $count,
-				'id'    => $range
-				);
+			if($count > 0){
+				$viewCountFacet[] = array(
+					'name'	=> $viewCountRange[$range],
+					'count' => $count,
+					'id'    => $range
+					);
+			}
+				
 		}
 		//_p($viewCountFacet);die;
 		return $viewCountFacet;
@@ -139,16 +144,18 @@ class Response_parser
 
 	private function _prepareAnsCountFacet($ansCountFacetInput){
 		//_p($viewCountFacetInput);//die;
-		$ansCountRange = array();
+		$ansCountFacet = array();
 		global $ansCountRange;
 		//_p($ansCountRange);
 		//_p($ansCountFacetInput);die;
 		foreach ($ansCountFacetInput as $range => $count) {
-			$ansCountFacet[] = array(
-				'name'	=> $ansCountRange[$range],
-				'count' => $count,
-				'id'    => $range
-				);
+			if($count > 0){
+				$ansCountFacet[] = array(
+					'name'	=> $ansCountRange[$range],
+					'count' => $count,
+					'id'    => $range
+					);
+			}
 		}
 		//_p($viewCountFacet);die;
 		return $ansCountFacet;
