@@ -10,7 +10,8 @@
 			<h1 style="margin-left: 10px;color:#696969;font-family: arial, sans-serif;font-size:12px;">APS</h1>			
 		
 		</header>
-		
+		<div class="loader" id="loadingImage" style="display:none;position: absolute; z-index: 9999; top: 585.5px; left: 579.5px;"><img src="<?php echo base_url();?>images/loader.gif"> Loading</div>
+
 		<div class="main-div">
 			<form name="aps" action="<?php echo base_url('search/search')?>" method="POST"><br>	
 				<div>
@@ -68,6 +69,9 @@
 	<script src="<?php echo base_url('js/autosuggestor.js')?>"></script>
 	<script src="<?php echo base_url('js/common.js')?>"></script>
 	<script type="text/javascript">
-		var base_url = '<?php echo base_url(); ?>';
-	</script>
+		var base_url = '<?php echo base_url(); ?>';		
+		$('document').ready(function(){
+			initializeFilters();
+		});
+	</script>	
 </html>

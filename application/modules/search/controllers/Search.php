@@ -45,5 +45,9 @@ class Search extends MX_Controller{
 		echo json_encode($recommendateQuestions);		
 		exit();
 	}
+
+	function getFilteredResult(){
+		_p('getFilteredResult');die;
+	}
 }
 ?>
