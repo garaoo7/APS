@@ -50,6 +50,7 @@ class Index extends MX_Controller{
 			echo 'Max Question id : '.$maxQuestionId.'<br>';
 			//$questionCount = $this->indexerLib->getQuestionCount();
 			$baseQuestionId = $minQuestionId;
+			// $baseQuestionId = 3500000;
 			$count = 0;
 			while($baseQuestionId<=$maxQuestionId){
 				echo "Fetching Documents with baseQuestionId : ".$baseQuestionId. " and batchSize=".$batchSize;

@@ -18,6 +18,8 @@ class Search_lib{
 			return;
 		}
 		$tags = $this->_getTags($inputQuery);
+		_p($tags);
+		die;
 		$result = $this->_getQuestions($inputQuery,$tags);
 		//_p($result);die;
 		$data = $this->_prepareResponseData($result);
@@ -207,8 +209,11 @@ class Search_lib{
 		$urlComponents[] = 'fq=faceType:tag';
 		$urlComponents[] = 'df=tagName';
 		$urlComponents[] = 'fl=tagId,tagName,tagQualityScore';
+		$urlComponents[] = 'bq=tagQualityScore:[0 TO 0.25]^2000 tagQualityScore:[0.25 TO 0.5]^4000 tagQualityScore:[0.5 TO 0.75]^64000 tagQualityScore:[0.75 TO *]^128000';
+		$urlComponents[] = 'start=0&rows=20';
 
 		$urlComp = implode('&', $urlComponents);
+		$this->curlLib->setIsRequestToSolr(1);
 		$result = $this->curlLib->curl(SOLR_SELECT_URL,$urlComp)->getResult();
 		$result = unserialize($result);
 		$tags = $result['response']['docs'];
