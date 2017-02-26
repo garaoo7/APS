@@ -4,189 +4,47 @@ class Search_lib{
 	private $qustionModel;
 	private $curlLib;
 	private $ci;
+	private $responseParser;
 	function __construct(){
 		$this->ci = &get_instance();
 		$this->ci->load->library('indexer/Curl');
 		$this->curlLib = new Curl();
+		$this->ci->load->library('search/Response_parser');
+		$this->responseParser = new Response_parser();
 	}
-	// private function _init_lib(){
-	// 	$this->questionModel = $this->load->model('common/Question_model');
 
-	// }
 	public function getResultTuples($inputQuery, $appliedFilters){
 		if($inputQuery==''){
 			return;
 		}
-		$tags = $this->_getTags($inputQuery);//_p($tags);die;
+		$tags = $this->_getTags($inputQuery);
+
 		$result = $this->_getQuestions($inputQuery,$tags, $appliedFilters);
-		//_p($result);die;
-		$data = $this->_prepareResponseData($result);
+		/*_p($result);
+		die;*/
+		$data = $this->responseParser->prepareResponseData($result);
 
 		return $data;
-	}
-
-	private function _prepareQuestionTupleData($response){
-		$data= array();
-		foreach ($response as $key => $questionDetails) {
-			$questionTags = array();
-			foreach ($questionDetails as $key => $value) {
-				if(strpos($key, 'tag_name_') !== false){
-					$questionTags[] = $value;
-				}
- 			}
- 			$creationDate = rtrim(str_replace('T', ' ', $questionDetails['questionCreationDate']), 'Z');
-			$data[] = array(
-										'questionId'	=> $questionDetails['questionId'],
-										'questionTitle' => $questionDetails['questionTitle'],
-										'description' 	=> $questionDetails['questionDescription'],
-										'creationDate'	=> $creationDate,
-										'viewCount'		=> $questionDetails['viewCount'],
-										'ansCount'		=> $questionDetails['ansCount'],
-										'tags' 			=> $questionTags
-										);
-		}
-		return $data;
-	}
-
-	private function _prepareResponseData($response){
-		//_p($response);die;
-		$questionData = $response['response'];
-		$data = array();
-		$data['questionCount'] = $questionData['numFound'];
-		$result = $this->_prepareQuestionTupleData($questionData['docs']);
-		$data['questions'] = $result;
-		$data['facet'] = $this->_prepareFacets($response['facet_counts']);
-		//_p($data['facets']);die;
-		//_p($data);die;
-		$data['facets']['View Count'] = $data['facet']['queryFacet']['viewCountFacet'];
-		$data['facets']['Answer Count'] = $data['facet']['queryFacet']['ansCountFacet'];
-		$data['facets']['Tag'] = $data['facet']['fieldFacet'] ? $data['facet']['fieldFacet']['tagFacet']: array();
-		unset($data['facet']);
-		return $data;
-	}
-
-	private function _prepareFacets($facetData){
-		//_p($facetData);die;
-		$facets = array();
-		$facets['queryFacet'] = $this->_prepareQueryFacet($facetData['facet_queries']);
-		$facets['fieldFacet'] = $this->_prepareFieldFacet($facetData['facet_fields']);
-		//_p($facets);die;
-		return $facets;
-	}
-
-	private function _prepareFieldFacet($fieldFacetData){
-		//_p($fieldFacetData);
-		$fieldFacet = array();
-		$tagFacet = array();
-		foreach ($fieldFacetData as $key => $tagDetails) {
-			if(strpos($key, 'tag_name_') !== false){
-				foreach ($tagDetails as $tag => $tagQuestionCount) {
-					$tagFacet[] = array(
-						'field' => $key,
-						'name'	=> $tag,
-						'count'	=> $tagQuestionCount
-					);
-				}
-			}
-		}
-		//_p($tagFacet);die;
-		//die;
-		if(count($tagFacet) > 0){
-			$fieldFacet['tagFacet'] = $tagFacet;
-		}
-		//_p($tagFacet);die;
-		//_p($fieldFacet);die;
-		return $fieldFacet;
-	}
-
-	private function _prepareQueryFacet($queryFacetData){
-		//_p($queryFacetData);die;
-		$queryFacet = array();
-		$viewCountFacet = array();
-		$ansCountFacet = array();
-		foreach ($queryFacetData as $key => $value) {
-			if(strpos($key, 'views') !== false){
-				$viewCountFacet[str_replace('views', '', $key)] = $value;
-			}
-			if(strpos($key, 'answer') !== false){
-				$ansCountFacet[str_replace('answer', '', $key)] = $value;
-			}
-		}
-		//_p($viewCountFacet);die;
-		if(count($viewCountFacet) >0){
-			$queryFacet['viewCountFacet'] = $this->_prepareViewCountFacet($viewCountFacet);
-		}
-		if(count($ansCountFacet) >0){
-			$queryFacet['ansCountFacet'] = $this->_prepareAnsCountFacet($ansCountFacet);
-		}
-		//_p($queryFacet);die;
-		return $queryFacet;
-	}
-
-	private function _prepareViewCountFacet($viewCountFacetInput){
-		//_p($viewCountFacetInput);//die;
-		$viewCountFacet = array();
-		global $viewCountRange;
-		//_p($viewCountRange);die;
-		foreach ($viewCountFacetInput as $range => $count) {
-			$viewCountFacet[] = array(
-				'name'	=> $viewCountRange[$range],
-				'count' => $count,
-				);
-		}
-		//_p($viewCountFacet);die;
-		return $viewCountFacet;
-	}
-
-	private function _prepareAnsCountFacet($ansCountFacetInput){
-		//_p($viewCountFacetInput);//die;
-		$ansCountRange = array();
-		global $ansCountRange;
-		//_p($ansCountRange);
-		//_p($ansCountFacetInput);die;
-		foreach ($ansCountFacetInput as $range => $count) {
-			$ansCountFacet[] = array(
-				'name'	=> $ansCountRange[$range],
-				'count' => $count,
-				);
-		}
-		//_p($viewCountFacet);die;
-		return $ansCountFacet;
-	}
-
-
-	private function _getSolrQuery($inputQuery,$tags){
-		$urlComponents = array();
-        $urlComponents[] = 'q='.$inputQuery;
-        $urlComponents[] = 'wt=phps';
-        $urlComponents[] = 'defType=edismax';
-        $urlComponents[] = 'fq=faceType:question';
-        $urlComponents[] = 'df=questionTitle';
-        $urlComponents[] = 'bq='.$this->_getTagsQF($tags);
-        $urlComponents= implode('&', $urlComponents);
-        $result = $this->curlLib->curl(SOLR_SELECT_URL,$urlComponents)->getResult();
-		$result = unserialize($result);
-		return $result;
 	}
 
 	private function _getQuestions($inputQuery,$tags, $appliedFilters){
 		$urlComponents = array();
-        $urlComponents[] = 'q='.$inputQuery;
+        $urlComponents[] = 'q='.urlencode($inputQuery);
         $urlComponents[] = 'wt=phps';
         $urlComponents[] = 'defType=edismax';
         $urlComponents[] = 'fq=faceType:question';
         $urlComponents[] = 'fl=*,score';
         $urlComponents[] = 'df=questionTitle';
         $urlComponents[] = 'bq='.$this->_getTagsQF($tags);
-        
+        //_p($urlComponents);die;
         $urlComponentsForAppliedFilter =  $this->_prepareAppliedFilter($appliedFilters);
         $urlComponents = array_merge($urlComponents , $urlComponentsForAppliedFilter);
         
         $facetComponents = $this->_getFacetComponent($tags);
         $urlComponents = array_merge($urlComponents, $facetComponents);
         //_p($urlComponents);die;
-        $urlComponents= implode('&', $urlComponents);
         
+        $urlComponents= implode('&', $urlComponents);
         $result = $this->curlLib->curl(SOLR_SELECT_URL,$urlComponents)->getResult();
         //_p($result);die;	
 		$result = unserialize($result);
@@ -196,20 +54,38 @@ class Search_lib{
 
 	private function _prepareAppliedFilter($appliedFilters){
 		$urlComponents = array();
-		// tag filter
-		if(!empty($appliedFilters['tag']) && count($appliedFilters['tag']) > 0){
-			foreach ($appliedFilters['tag'] as $key => $value) {
-				$urlComponents[] = 'fq='.$key.':'.$value;
-			}
-		}
+		if(empty($appliedFilters))
+			return $urlComponents;
 
-		// view count filter
-		if(!empty($appliedFilters['views']) && count($appliedFilters['views']) > 0){
-			foreach ($appliedFilters['views'] as $views) {
-				$view = explode('-', $views);
-				$urlComponents[] = 'fq=viewCount:['.$view[0].' To '.$view[1].']';
+		foreach ($appliedFilters as $filter) {
+			switch ($filter['name']) {
+				case 'Views':
+					$urlComponents[] = 'fq=viewCount'.':['.str_replace('-', ' TO ',$filter['value']).']';
+				break;
+				case 'Answers':
+					$urlComponents[] = 'fq=ansCount'.':['.str_replace('-', ' TO ',$filter['value']).']';
+				break;
+				case 'Tags':
+					$urlComponents[] = 'fq=tag_name_'.$filter['value'].':'.'*';
+				break;
+				
 			}
 		}
+		//_p($urlComponents);die;
+		// tag filter
+		// if(!empty($appliedFilters['tag']) && count($appliedFilters['tag']) > 0){
+		// 	foreach ($appliedFilters['tag'] as $key => $value) {
+		// 		$urlComponents[] = 'fq='.$key.':'.$value;
+		// 	}
+		// }
+
+		// // view count filter
+		// if(!empty($appliedFilters['views']) && count($appliedFilters['views']) > 0){
+		// 	foreach ($appliedFilters['views'] as $views) {
+		// 		$view = explode('-', $views);
+		// 		$urlComponents[] = 'fq=viewCount:['.$view[0].' To '.$view[1].']';
+		// 	}
+		// }
 
 		// answer count flter
 		return $urlComponents;
@@ -239,12 +115,13 @@ class Search_lib{
 	}
 
 	private function _getTagFacets($tags){
-		$tagFacetComponent = array();
-		foreach ($tags as $tag) {
-			$tagFacetComponent[] = 'facet.field=tag_name_'.$tag['tagId'];
-		}
-		$tagFacetComponent = implode('&', $tagFacetComponent);
+		// $tagFacetComponent = array();
+		// foreach ($tags as $tag) {
+		// 	$tagFacetComponent[] = 'facet.field=tag_name_'.$tag['tagId'];
+		// }
+		// $tagFacetComponent = implode('&', $tagFacetComponent);
 		//_p($tagFacetComponent);die;
+		$tagFacetComponent = 'facet.field=tagIdNameMap';
 		return $tagFacetComponent;
 	}
 
@@ -275,9 +152,14 @@ class Search_lib{
 
 	private function _getTagsQF($tags){
 		$str = '';
-		foreach ($tags as $tag) {
-			$str.=' tag_name_'.$tag['tagId'].':"'.$tag['tagName'].'"^'.(1000*$tag['tagQualityScore']);
+		if(!empty($tags)){
+			foreach ($tags as $tag) {
+				$str.=' tag_name_'.$tag['tagId'].':"'. urlencode($tag['tagName']) .'"^'.(64000*$tag['tagQualityScore']);
+
+				//$str.=' tag_name_'.$tag['tagId'].':"'. str_replace('&', '\&', $tag['tagName']) .'"^'.(64000*$tag['tagQualityScore']);
+			}	
 		}
+		//_p($str);die;
 		return $str;
 	}
 
@@ -289,13 +171,16 @@ class Search_lib{
 		$urlComponents[] = 'fq=faceType:tag';
 		$urlComponents[] = 'df=tagName';
 		$urlComponents[] = 'fl=tagId,tagName,tagQualityScore';
-		$urlComponents[] = 'bq=tagQualityScore:[0 TO 0.25]^2000 tagQualityScore:[0.25 TO 0.5]^4000 tagQualityScore:[0.5 TO 0.75]^64000 tagQualityScore:[0.75 TO *]^128000';
+		/*$urlComponents[] = 'bq=tagQualityScore:[0 TO 0.25]^2000 tagQualityScore:[0.25 TO 0.5]^4000 tagQualityScore:[0.5 TO 0.75]^64000 tagQualityScore:[0.75 TO *]^128000';*/
 		$urlComponents[] = 'start=0&rows=20';
 
 		$urlComp = implode('&', $urlComponents);
 		$this->curlLib->setIsRequestToSolr(1);
 		$result = $this->curlLib->curl(SOLR_SELECT_URL,$urlComp)->getResult();
+		
+		// die;
 		$result = unserialize($result);
+		//_p($result);die;
 		$tags = $result['response']['docs'];
 		return $tags;
 	}

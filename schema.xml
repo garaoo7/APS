@@ -359,7 +359,7 @@
       <filter class="solr.LowerCaseFilterFactory"/>
       <filter class="solr.ASCIIFoldingFilterFactory"/>
       <filter class="solr.KStemFilterFactory"/>
-    <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
+    <filter class="solr.SynonymFilterFactory" synonyms="lang/synonyms_en.txt" ignoreCase="true" expand="true"/>
 </analyzer>
 </fieldType>
 

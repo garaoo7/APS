@@ -50,8 +50,13 @@ function getFilteredResults(){
   // postData['isAjax'] = 1;
   $.ajax({
         type  : "POST",
+<<<<<<< HEAD
+        url   : base_url+'/search/Search/getFilteredResult',
+        data  : {'data': $("#questionFilters").serialize()},
+=======
         url   : base_url+'search/Search/getFilteredResult',
         data  : postData,
+>>>>>>> 268351f481ba5f030f3dc2c4fa5c54cfac34f6ed
         beforeSend  : function(){
             //showFilterLoader();
         }

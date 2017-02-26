@@ -12,41 +12,8 @@
 		</header>
 		<div class="loader" id="loadingImage" style="display:none;position: absolute; z-index: 9999; top: 585.5px; left: 579.5px;"><img src="<?php echo base_url();?>images/loader.gif"> Loading</div>
 
-		<div class="main-div">
-			<form name="aps" action="<?php echo base_url('search/search')?>" method="POST"><br>	
-				<div>
-					<input type="text" class="search" id="searchBox" name ='searchText' placeholder="Search a question">
-					<input id='searchButton' type="submit" class="button" value="Search">
-				</div>
-				<div id ="recommdated-questions" class="recommdated-questions"></div>
-			</form>
-		</div>
-
-
-		<div style="margin-top: 75px;">
-		<div style="float: left">
-		<!-- <b style="font-size:20px">Facets:</b> -->
-		<?php
-		$this->load->view('facet');
-		?>
-
-		</div>
-		<div style="margin-left: 25%" id = "questionResult">
-				<?php 
-				foreach ($questions as $question) {
-					echo '<p><b>'.$question['questionTitle'].'</b></p>';
-					echo '<div style="padding-left:15px">';
-					echo '<p >'.$question['description'].'</p>';
-					echo '<p ><b>Answers</b> : '.$question['ansCount'].'&nbsp&nbsp&nbsp&nbsp&nbsp <b>Views</b> : '.$question['viewCount'].'</p>';		
-					if($question['tags']){
-						echo '<b>Tags:</b> ';
-						$question['tags'] = implode(" || ", $question['tags']);
-						echo $question['tags'];
-					}
-					echo '</div>';
-				}
-				?>
-		</div>
+		<div id="content">
+		<?php $this->load->view('search/content');?>
 		</div>
 		
 		<!-- <footer>
@@ -62,8 +29,5 @@
 	<script src="<?php echo base_url('js/common.js')?>"></script>
 	<script type="text/javascript">
 		var base_url = '<?php echo base_url(); ?>';		
-		$('document').ready(function(){
-			initializeFilters();
-		});
 	</script>	
 </html>
