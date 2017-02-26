@@ -18,7 +18,8 @@ class Search_lib{
 			return;
 		}
 		$tags = $this->_getTags($inputQuery);
-
+		// _p($tags);
+		// die;
 		$result = $this->_getQuestions($inputQuery,$tags, $appliedFilters);
 		/*_p($result);
 		die;*/
@@ -36,7 +37,8 @@ class Search_lib{
         $urlComponents[] = 'fl=*,score';
         $urlComponents[] = 'df=questionTitle';
         $urlComponents[] = 'bq='.$this->_getTagsQF($tags);
-        //_p($urlComponents);die;
+        $urlComponents[] = 'hl=true&hl.fl=questionTitle&hl.simple.pre='.urlencode('<b>').'&hl.simple.post='.urlencode('</b>');
+        // _p($urlComponents);die;
         $urlComponentsForAppliedFilter =  $this->_prepareAppliedFilter($appliedFilters);
         $urlComponents = array_merge($urlComponents , $urlComponentsForAppliedFilter);
         
@@ -48,7 +50,7 @@ class Search_lib{
         $result = $this->curlLib->curl(SOLR_SELECT_URL,$urlComponents)->getResult();
         //_p($result);die;	
 		$result = unserialize($result);
-		//_p($result);die;
+		// _p($result);die;
 		return $result;
 	}
 
@@ -171,7 +173,7 @@ class Search_lib{
 		$urlComponents[] = 'fq=faceType:tag';
 		$urlComponents[] = 'df=tagName';
 		$urlComponents[] = 'fl=tagId,tagName,tagQualityScore';
-		/*$urlComponents[] = 'bq=tagQualityScore:[0 TO 0.25]^2000 tagQualityScore:[0.25 TO 0.5]^4000 tagQualityScore:[0.5 TO 0.75]^64000 tagQualityScore:[0.75 TO *]^128000';*/
+		$urlComponents[] = 'bq=tagQualityScore:[0 TO 0.25]^2000 tagQualityScore:[0.25 TO 0.5]^4000 tagQualityScore:[0.5 TO 0.75]^64000 tagQualityScore:[0.75 TO *]^128000';
 		$urlComponents[] = 'start=0&rows=20';
 
 		$urlComp = implode('&', $urlComponents);

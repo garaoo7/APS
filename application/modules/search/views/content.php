@@ -24,7 +24,9 @@
 				<?php 
 			if(!empty($questions)){
 				foreach ($questions as $question) {
-					echo '<p><b>'.$question['questionTitle'].'</b></p>';
+					// _p($question);
+					// die;	
+					echo '<p style="font-size:20px">'.$question['questionTitle'].'</p>';
 					echo '<div style="padding-left:15px">';
 					// echo '<p >'.$question['description'].'</p>';
 					echo '<p ><b>Answers</b> : '.$question['ansCount'].'&nbsp&nbsp&nbsp&nbsp&nbsp <b>Views</b> : '.$question['viewCount'].'</p>';		
@@ -33,6 +35,8 @@
 						$question['tags'] = implode(" || ", $question['tags']);
 						echo $question['tags'];
 					}
+					$date = explode(' ', $question['creationDate']);
+					echo '<p><b>Creation Date: </b>'.$date[0].'</p>';
 					echo '</div>';
 				}
 			}

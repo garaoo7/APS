@@ -60,7 +60,8 @@ class Indexer_lib{
         //print_r($questionsData);die;
         //echo '<pre>'.print_r($questionsData,true).'</pre>';die;
     	foreach ($questionsData as $question) {
-            //print_r($question);die;
+            // _p($question);
+            // echo $question['questionId'].'<br>';
     		$tagDetails = array();	
     		$tagId = explode($delimiter,$question['tagId']);
     		$tagName = explode($delimiter,$question['tagName']);
@@ -79,6 +80,7 @@ class Indexer_lib{
     		unset($question['tagName']);
     		$completeXML .= $this->generateXML($question);
     	}
+        // die;
         $completeXML = '<add>'.$completeXML.'</add>';
 	return $completeXML;
     }
