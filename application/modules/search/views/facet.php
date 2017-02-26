@@ -7,7 +7,7 @@
 			?>
 				<div><b><?php echo $facetName; ?></b></div>
 				<div>
-					<ul style="list-style:none;max-height:155px;overflow:auto;padding:0px !important">
+					<ul style="list-style:none;max-height:200px;overflow:auto;padding:0px !important">
 						<?php foreach ($facetData as $facet) { 
 							if($facet['count'] > 0){ ?>
 							<li>

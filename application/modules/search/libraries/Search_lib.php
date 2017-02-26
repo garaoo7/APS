@@ -21,8 +21,8 @@ class Search_lib{
 		// _p($tags);
 		// die;
 		$result = $this->_getQuestions($inputQuery,$tags, $appliedFilters);
-		/*_p($result);
-		die;*/
+		_p($result);
+		die;
 		$data = $this->responseParser->prepareResponseData($result);
 
 		return $data;
@@ -55,20 +55,44 @@ class Search_lib{
 	}
 
 	private function _prepareAppliedFilter($appliedFilters){
+		//_p($appliedFilters);die;
 		$urlComponents = array();
 		if(empty($appliedFilters))
 			return $urlComponents;
-
-		foreach ($appliedFilters as $filter) {
-			switch ($filter['name']) {
+		$appliedFiltersArray =array();
+		foreach ($appliedFilters as $key => $value) {
+			$appliedFiltersArray[$value['name']][] = $value['value'];
+		}
+		foreach ($appliedFiltersArray as $facet => $filters) {
+			switch ($facet) {
 				case 'Views':
-					$urlComponents[] = 'fq=viewCount'.':['.str_replace('-', ' TO ',$filter['value']).']';
+					$orCondition ='';
+					$viewFacetUrlComponents = 'fq={!tag=tagForViewCountFilter}viewCount:(';
+					foreach ($filters as $key => $filter) {
+						$viewFacetUrlComponents .= $orCondition.'['.str_replace('-', ' TO ',$filter).']';	
+						$orCondition = ' OR ';
+					}
+					if($viewFacetUrlComponents!="") {
+						$urlComponents[] = rtrim($viewFacetUrlComponents, ' OR ').')';
+					}
 				break;
 				case 'Answers':
-					$urlComponents[] = 'fq=ansCount'.':['.str_replace('-', ' TO ',$filter['value']).']';
+					$orCondition ='';
+					$answerFacetUrlComponents = 'fq={!tag=tagForAnswerCountFilter}ansCount:(';
+					foreach ($filters as $key => $filter) {
+						$answerFacetUrlComponents .= $orCondition.'['.str_replace('-', ' TO ',$filter).']';
+						$orCondition = ' OR ';
+					}
+					if($answerFacetUrlComponents!="") {
+						$urlComponents[] = rtrim($answerFacetUrlComponents, ' OR ').')';
+					}
 				break;
 				case 'Tags':
-					$urlComponents[] = 'fq=tag_name_'.$filter['value'].':'.'*';
+
+					foreach ($filters as $key => $filter) {
+						$tagFacetUrlComponents[] =	'fq={!tag=tagForTagFilter}tag_name_'.$filter.':'.'*';
+					}
+					$urlComponents[] = implode(' OR ', $tagFacetUrlComponents);
 				break;
 				
 			}
@@ -94,7 +118,7 @@ class Search_lib{
 	}
 
 	private function _getFacetComponent($tags){
-		$facets = array('tag', 'views', 'answer');
+		$facets = array('tag', 'views', 'answer','date');
 		$urlComponents[] = 'facet=true';
 		foreach ($facets as $facet) {
 			switch ($facet) {
@@ -109,11 +133,20 @@ class Search_lib{
 				case 'answer':
 					$urlComponents[] = $this->_getAnswerFacets();
 					break;
+
+				case 'date':
+					$urlComponents[] = $this->_getDateFacets();
+					break;
 			}
 		}
 		//$urlComponents = implode('&', $urlComponents);
 		return $urlComponents;
 		//_p($urlComponents);die;
+	}
+
+	private function _getDateFacets(){
+		$urlComponents = 'facet.date=questionCreationDate&facet.date.start=NOW/YEAR-8YEARS&facet.date.end=NOW/YEAR-4YEARS&facet.date.gap=%2B1YEAR';
+		return $urlComponents;
 	}
 
 	private function _getTagFacets($tags){
@@ -123,7 +156,7 @@ class Search_lib{
 		// }
 		// $tagFacetComponent = implode('&', $tagFacetComponent);
 		//_p($tagFacetComponent);die;
-		$tagFacetComponent = 'facet.field=tagIdNameMap';
+		$tagFacetComponent = 'facet.field={!ex=tagForTagFilter}tagIdNameMap';
 		return $tagFacetComponent;
 	}
 
@@ -132,7 +165,7 @@ class Search_lib{
 		$viewFacetComponents = array();
 		foreach ($viewCountRange as $key => $value) {
 			$keys = explode('-', $key);
-			$viewFacetComponents[] = 'facet.query={!key =views'.$key.'}viewCount:['.$keys[0].' TO '.$keys[1].']';
+			$viewFacetComponents[] = 'facet.query={!ex=tagForViewCountFilter key =views'.$key.'}viewCount:['.$keys[0].' TO '.$keys[1].']';
 		}
 		$viewFacetComponents = implode('&', $viewFacetComponents);
 		return $viewFacetComponents;
@@ -144,7 +177,7 @@ class Search_lib{
 		$ansFacetComponents = array();
 		foreach ($ansCountRange as $key => $value) {
 			$keys = explode('-', $key);
-			$ansFacetComponents[] = 'facet.query={!key =answer'.$key.'}ansCount:['.$keys[0].' TO '.$keys[1].']';
+			$ansFacetComponents[] = 'facet.query={!ex=tagForAnswerCountFilter key =answer'.$key.'}ansCount:['.$keys[0].' TO '.$keys[1].']';
 		}
 		$ansFacetComponents = implode('&', $ansFacetComponents);
 		//_p($ansFacetComponents);die;
