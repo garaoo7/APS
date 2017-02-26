@@ -104,5 +104,5 @@ global $ansCountRange;
 $ansCountRange= array(
 	'0-50' => '0 To 50',
 	'51-100' => '51 To 100',
-	'101-1000000' => '101 To *'
+	'101-1000000' => 'More than 100'
 );

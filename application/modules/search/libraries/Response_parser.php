@@ -6,8 +6,11 @@ class Response_parser
 		// _p($response);die;
 		$questionData = $response['response'];
 		$data = array();
+		if(empty($questionData)){
+			return $data;
+		}
 		$data['questionCount'] = $questionData['numFound'];
-		$result = $this->_prepareQuestionTupleData($questionData['docs']);
+		$result = $this->_prepareQuestionTupleData($questionData['docs'],$response['highlighting']);
 		$data['questions'] = $result;
 		$data['facet'] = $this->_prepareFacets($response['facet_counts']);
 		//_p($data['facets']);die;
@@ -19,7 +22,7 @@ class Response_parser
 		return $data;
 	}
 
-	private function _prepareQuestionTupleData($response){
+	private function _prepareQuestionTupleData($response,$highlighting){
 		$data= array();
 		
 		foreach ($response as $key => $questionDetails) {
@@ -32,7 +35,8 @@ class Response_parser
  			$creationDate = rtrim(str_replace('T', ' ', $questionDetails['questionCreationDate']), 'Z');
 			$data[] = array(
 										'questionId'	=> $questionDetails['questionId'],
-										'questionTitle' => $questionDetails['questionTitle'],
+										'questionTitle' => $highlighting[$questionDetails['unique_id']]['questionTitle'][0],
+										// 'questionTitle' => $questionDetails['questionTitle'],
 										// 'description' 	=> $questionDetails['questionDescription'],
 										'creationDate'	=> $creationDate,
 										'viewCount'		=> $questionDetails['viewCount'],
