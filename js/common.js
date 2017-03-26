@@ -14,7 +14,7 @@ var apsSearchClass = function(obj){
     $(document).on(eventName, elementSelector,function(event) {
       switch(elementSelector) {
         case '#searchBox':
-          	//autoSuggestionObj.getSuggestions($(this).val());
+          	autoSuggestionObj.getSuggestions($(this).val());
         break;
 
         case '.recommdated-question':
@@ -33,6 +33,7 @@ var apsSearchClass = function(obj){
 
 function searchResultPage(){
 }
+
 $(document).ready(function(){
   apsObj = new apsSearchClass();
   autoSuggestionObj = new autoSuggestorClass();

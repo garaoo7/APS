@@ -72,12 +72,17 @@
 <field name="questionCreationDate" type="tdate" indexed="true" stored="true"/>
 <field name="viewCount" type="APSint" indexed="true" stored="true"/>
 <field name="ansCount" type="int" indexed="true" stored="true"/>
+<field name="textEdgeNGram" type="text_edgeNGram" indexed="true"/>
+<field name="keywordEdgeNGram" type="keyword_edgeNGram" indexed="true"/>
 <dynamicField name="tag_name_*" type="string" indexed="true" stored="true" />
 
 <field name="tagId" type="string" indexed="true" stored="true"/>
 <field name="tagName" type="text" indexed="true" stored="true"/>
 <field name="tagQualityScore" type="float" stored="true"/>
 <field name="tagIdNameMap" type="string" multiValued='true' indexed='true' stored="true"/>
+
+<copyField source="questionTitle" dest="textEdgeNGram"/>
+<copyField source="questionTitle" dest="keywordEdgeNGram"/>
 
 
 
@@ -367,7 +372,33 @@
 
 
 
+<fieldType name="text_edgeNGram" class="solr.TextField" positionIncrementGap="100">
+  <analyzer type="index">
+    <tokenizer class="solr.PatternTokenizerFactory" pattern="([^a-zA-Z0-9.])"/>
+    <filter class="solr.LowerCaseFilterFactory"/>
+    <filter class="solr.EdgeNGramFilterFactory" minGramSize="1" maxGramSize="25"/>
+  </analyzer>
+  <analyzer type="query">
+    <tokenizer class="solr.PatternTokenizerFactory" pattern="([^a-zA-Z0-9.])"/>
+    <filter class="solr.LowerCaseFilterFactory"/>
+    <filter class="solr.TrimFilterFactory"/>
+    <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_en.txt"/>
+  </analyzer>
+</fieldType>
 
+<fieldType name="keyword_edgeNGram" class="solr.TextField" positionIncrementGap="100">
+  <analyzer type="index">
+    <tokenizer class="solr.KeywordTokenizerFactory"/>
+    <filter class="solr.TrimFilterFactory"/>
+    <filter class="solr.LowerCaseFilterFactory"/>
+    <filter class="solr.EdgeNGramFilterFactory" minGramSize="1" maxGramSize="200"/>
+  </analyzer>
+  <analyzer type="query">
+    <tokenizer class="solr.KeywordTokenizerFactory"/>
+    <filter class="solr.TrimFilterFactory"/>
+    <filter class="solr.LowerCaseFilterFactory"/>
+</analyzer>
+</fieldType>
 
 
 

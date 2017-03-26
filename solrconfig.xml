@@ -834,8 +834,20 @@
        <str name="echoParams">explicit</str>
        <int name="rows">10</int>
        <str name="df">questionTitle</str>
+  <str name="spellcheck">on</str>
+  <str name="spellcheck.extendedResults">false</str>
+  <str name="spellcheck.count">5</str>
+  <str name="spellcheck.alternativeTermCount">2</str>
+  <str name="spellcheck.maxResultsForSuggest">5</str>
+  <str name="spellcheck.collate">true</str>
+  <str name="spellcheck.collateExtendedResults">true</str>
+  <str name="spellcheck.maxCollationTries">5</str>
+  <str name="spellcheck.maxCollations">3</str>
      </lst>
-    </requestHandler>
+  <arr name="last-components">
+       <str>spellcheck</str>
+  </arr>
+</requestHandler>
 
 
 
@@ -1301,7 +1313,7 @@
      -->
   <searchComponent name="spellcheck" class="solr.SpellCheckComponent">
 
-    <str name="queryAnalyzerFieldType">text_general</str>
+    <str name="queryAnalyzerFieldType">text</str>
 
     <!-- Multiple "Spell Checkers" can be declared and used by this
          component
@@ -1310,7 +1322,7 @@
     <!-- a spellchecker built from a field of the main index -->
     <lst name="spellchecker">
       <str name="name">default</str>
-      <str name="field">text</str>
+      <str name="field">tagName</str>
       <str name="classname">solr.DirectSolrSpellChecker</str>
       <!-- the spellcheck distance measure used, the default is the internal levenshtein -->
       <str name="distanceMeasure">internal</str>
@@ -1327,7 +1339,7 @@
       <!-- maximum threshold of documents a query term can appear to be considered for correction -->
       <float name="maxQueryFrequency">0.01</float>
       <!-- uncomment this to require suggestions to occur in 1% of the documents
-      	<float name="thresholdTokenFrequency">.01</float>
+        <float name="thresholdTokenFrequency">.01</float>
       -->
     </lst>
     
@@ -1418,7 +1430,7 @@
   </requestHandler>
 
   <searchComponent name="suggest" class="solr.SuggestComponent">
-  	<lst name="suggester">
+    <lst name="suggester">
       <str name="name">mySuggester</str>
       <str name="lookupImpl">FuzzyLookupFactory</str>      <!-- org.apache.solr.spelling.suggest.fst -->
       <str name="dictionaryImpl">DocumentDictionaryFactory</str>     <!-- org.apache.solr.spelling.suggest.HighFrequencyDictionaryFactory --> 
@@ -1437,6 +1449,20 @@
       <str>suggest</str>
     </arr>
   </requestHandler>
+
+
+
+
+
+<requestHandler name="/APSSuggest" class="org.apache.solr.handler.component.SearchHandler">
+  <lst name="defaults">
+  <str name="wt">phps</str>
+  <str name="defType">edismax</str>
+  <str name="rows">10</str>
+  <str name="fl">questionTitle</str>
+  <str name="qf">keywordEdgeNGram</str>
+  </lst>
+</requestHandler>
   <!-- Term Vector Component
 
        http://wiki.apache.org/solr/TermVectorComponent

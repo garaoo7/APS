@@ -21,8 +21,8 @@ class Search_lib{
 		// _p($tags);
 		// die;
 		$result = $this->_getQuestions($inputQuery,$tags, $appliedFilters);
-		_p($result);
-		die;
+		// _p($result);
+		// die;
 		$data = $this->responseParser->prepareResponseData($result);
 
 		return $data;
@@ -38,6 +38,7 @@ class Search_lib{
         $urlComponents[] = 'df=questionTitle';
         $urlComponents[] = 'bq='.$this->_getTagsQF($tags);
         $urlComponents[] = 'hl=true&hl.fl=questionTitle&hl.simple.pre='.urlencode('<b>').'&hl.simple.post='.urlencode('</b>');
+        $urlComponents[] = 'start=0&rows=100';
         // _p($urlComponents);die;
         $urlComponentsForAppliedFilter =  $this->_prepareAppliedFilter($appliedFilters);
         $urlComponents = array_merge($urlComponents , $urlComponentsForAppliedFilter);
@@ -48,7 +49,7 @@ class Search_lib{
         
         $urlComponents= implode('&', $urlComponents);
         $result = $this->curlLib->curl(SOLR_SELECT_URL,$urlComponents)->getResult();
-        //_p($result);die;	
+        // _p($result);die;	
 		$result = unserialize($result);
 		// _p($result);die;
 		return $result;
@@ -189,7 +190,7 @@ class Search_lib{
 		$str = '';
 		if(!empty($tags)){
 			foreach ($tags as $tag) {
-				$str.=' tag_name_'.$tag['tagId'].':"'. urlencode($tag['tagName']) .'"^'.(64000*$tag['tagQualityScore']);
+				$str.=' tag_name_'.$tag['tagId'].':"'. urlencode($tag['tagName']) .'"^'.(1000*$tag['tagQualityScore']);
 
 				//$str.=' tag_name_'.$tag['tagId'].':"'. str_replace('&', '\&', $tag['tagName']) .'"^'.(64000*$tag['tagQualityScore']);
 			}	
@@ -238,5 +239,24 @@ class Search_lib{
  //        $customCurlObject1 = $customCurlObject->getResult();
  //        var_dump($customCurlObject1);die;
  //    }
+
+	public function getSuggestion($searchTerm){
+		$urlComponents = array();
+		$urlComponents[] = 'q='.$inputQuery;
+		$urlComponents[] = 'wt=phps';
+		$urlComponents[] = 'defType=edismax';
+		$urlComponents[] = 'fq=faceType:tag';
+		$urlComponents[] = 'df=tagName';
+		$urlComponents[] = 'fl=tagId,tagName,tagQualityScore';
+		$urlComponents[] = 'bq=tagQualityScore:[0 TO 0.25]^2000 tagQualityScore:[0.25 TO 0.5]^4000 tagQualityScore:[0.5 TO 0.75]^64000 tagQualityScore:[0.75 TO *]^128000';
+		$urlComponents[] = 'start=0&rows=20';
+
+		$urlComp = implode('&', $urlComponents);
+		$this->curlLib->setIsRequestToSolr(1);
+		$result = $this->curlLib->curl(SOLR_SELECT_URL,$urlComp)->getResult();
+		
+		$result = unserialize($result);
+		$tags = $result['response']['docs'];
+	}
 }
 ?>

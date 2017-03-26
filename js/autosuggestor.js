@@ -2,11 +2,12 @@ function temp(){
 	$('#suggestions').show();
 	$('#suggestions').html("nice");
 }
-
+ 
 
 var autoSuggestorClass = function(){
 	var self = this;
 	this.getSuggestions = function(searchTerm) {
+        $("#recommdated-questions").css('display','hide');
     	processedSearchTerm = self.processSearchTerm(searchTerm);
     	if(processedSearchTerm!=''){
     		$.ajax ({
