@@ -53,7 +53,7 @@ class Search extends MX_Controller{
 	public function getSuggestion(){
 		$searchTerm 	= $this->input->get('searchTerm',true);
 		$suggestions  	= $this->searchLib->getSuggestion($searchTerm);
-		echo json_encode($recommendateQuestions);		
+		echo json_encode($suggestions);		
 		exit();
 	}
 

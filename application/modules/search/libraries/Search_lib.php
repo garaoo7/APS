@@ -242,21 +242,20 @@ class Search_lib{
 
 	public function getSuggestion($searchTerm){
 		$urlComponents = array();
-		$urlComponents[] = 'q='.$inputQuery;
+		$urlComponents[] = 'q="'.$searchTerm.'"';
 		$urlComponents[] = 'wt=phps';
-		$urlComponents[] = 'defType=edismax';
-		$urlComponents[] = 'fq=faceType:tag';
-		$urlComponents[] = 'df=tagName';
-		$urlComponents[] = 'fl=tagId,tagName,tagQualityScore';
-		$urlComponents[] = 'bq=tagQualityScore:[0 TO 0.25]^2000 tagQualityScore:[0.25 TO 0.5]^4000 tagQualityScore:[0.5 TO 0.75]^64000 tagQualityScore:[0.75 TO *]^128000';
-		$urlComponents[] = 'start=0&rows=20';
 
 		$urlComp = implode('&', $urlComponents);
 		$this->curlLib->setIsRequestToSolr(1);
-		$result = $this->curlLib->curl(SOLR_SELECT_URL,$urlComp)->getResult();
+		$result = $this->curlLib->curl(SOLR_SUGGEST_URL,$urlComp)->getResult();
 		
 		$result = unserialize($result);
-		$tags = $result['response']['docs'];
+		$result = $result['response']['docs'];
+		$returnArray = array();
+		foreach ($result as $question) {
+			$returnArray[] = $question['questionTitle'];
+		}
+		return $returnArray;
 	}
 }
 ?>

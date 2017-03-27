@@ -22,11 +22,12 @@ var autoSuggestorClass = function(){
 	}
 
   this.prepareAutoSuggestor = function(response){
+
     if(response != ''){
-        var recommendateQuestions = JSON.parse(response);
+        var suggestions = JSON.parse(response);
         var recommendateQuestionsData = '';
-        for(var question in recommendateQuestions){
-          recommendateQuestionsData += "<li class ='recommdated-question' id='recommendateQuestions'><span>"+recommendateQuestions[question]+"</span></li>";
+        for(var question in suggestions){
+          recommendateQuestionsData += "<li class ='recommdated-question' id='recommendateQuestions'><span>"+suggestions[question]+"</span></li>";
         }
         $("#recommdated-questions").css('display','block');
         $("#recommdated-questions").html(recommendateQuestionsData);
